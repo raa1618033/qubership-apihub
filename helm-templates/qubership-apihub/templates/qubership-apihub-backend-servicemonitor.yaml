@@ -5,14 +5,12 @@ kind: ServiceMonitor
 metadata:
   labels:
     app.kubernetes.io/component: 'monitoring'
-    app.kubernetes.io/managed-by: saasDeployer
     app.kubernetes.io/processed-by-operator: victoriametrics-operator
-    app.kubernetes.io/name: '{{ .Values.SERVICE_NAME }}-monitor'
-    app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
-    app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
-    deployment.netcracker.com/sessionId: '{{ .Values.DEPLOYMENT_SESSION_ID }}'
-    k8s-app: '{{ .Values.SERVICE_NAME }}-monitor'
-  name: '{{ .Values.SERVICE_NAME }}-monitor'
+    app.kubernetes.io/name: 'qubership-apihub-backend-monitor'
+    app.kubernetes.io/part-of: qubership-apihub
+    app.kubernetes.io/managed-by: helm
+    k8s-app: 'qubership-apihub-backend-monitor'
+  name: 'qubership-apihub-backend-monitor'
 spec:
   targetLabels:
     - domain
@@ -27,6 +25,6 @@ spec:
       - {{ .Values.NAMESPACE }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ .Values.SERVICE_NAME }}
+      app.kubernetes.io/name: qubership-apihub-backend
 ---
   {{end}}

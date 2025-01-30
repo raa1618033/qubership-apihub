@@ -2,19 +2,18 @@
 kind: Service
 apiVersion: v1
 metadata:
-    name: '{{ coalesce .Values.SERVICE_NAME }}'
+    name: qubership-apihub-ui
     labels:
-        name: '{{ coalesce .Values.SERVICE_NAME }}'
-        app.kubernetes.io/name: '{{ .Values.SERVICE_NAME }}'
-        app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
-        app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
-        app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
-        deployment.netcracker.com/sessionId: '{{ .Values.DEPLOYMENT_SESSION_ID }}'
+        name: qubership-apihub-ui
+        app.kubernetes.io/name: 'qubership-apihub-ui'
+        app.kubernetes.io/version: '{{ .Values.QUBERSHIP_APIHUB_VERSION }}'
+        app.kubernetes.io/part-of: qubership-apihub
+        app.kubernetes.io/managed-by: helm
 spec:
     ports:
     -   name: web
         port: 8080
         targetPort: 8080
     selector:
-      name: '{{ coalesce .Values.SERVICE_NAME }}'
+      name: qubership-apihub-ui
 

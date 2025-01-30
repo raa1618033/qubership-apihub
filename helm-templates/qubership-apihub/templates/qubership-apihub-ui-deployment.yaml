@@ -2,63 +2,41 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-    name: '{{ coalesce .Values.SERVICE_NAME }}'
+    name: qubership-apihub-ui
     labels:
-        name: '{{ coalesce .Values.SERVICE_NAME }}'
-        app.kubernetes.io/name: '{{ .Values.SERVICE_NAME }}'
-        app.kubernetes.io/instance: '{{ cat .Values.SERVICE_NAME .Values.DELIMITER .Values.NAMESPACE | nospace | trunc 63 }}'
+        name: qubership-apihub-ui
+        app.kubernetes.io/name: 'qubership-apihub-ui'
         app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
         app.kubernetes.io/component: frontend
-        app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
-        app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
-        deployment.netcracker.com/sessionId: '{{ .Values.DEPLOYMENT_SESSION_ID }}'
+        app.kubernetes.io/part-of: qubership-apihub
+        app.kubernetes.io/managed-by: helm
         app.kubernetes.io/technology: 'cpp'
 spec:
     selector:
         matchLabels:
-          name: '{{ coalesce .Values.SERVICE_NAME }}'
+          name: qubership-apihub-ui
     replicas: {{ .Values.REPLICAS }}
     strategy:
-        {{- if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "recreate" }}
-        type: Recreate
-        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "best_effort_controlled_rollout" }}
-        type: RollingUpdate
-        rollingUpdate:
-            maxSurge: 0
-            maxUnavailable: 80%
-        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "ramped_slow_rollout" }}
-        type: RollingUpdate
-        rollingUpdate:
-            maxSurge: 1
-            maxUnavailable: 0
-        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "custom_rollout" }}
-        type: RollingUpdate
-        rollingUpdate:
-            maxSurge: {{ .Values.DEPLOYMENT_STRATEGY_MAXSURGE | default "25%" }}
-            maxUnavailable: {{ .Values.DEPLOYMENT_STRATEGY_MAXUNAVAILABLE | default "25%" }}
-        {{- else }}
         type: RollingUpdate
         rollingUpdate:
             maxSurge: 25%
             maxUnavailable: 25%
-        {{- end }}
     template:
         metadata:
             labels:
-                name: '{{ coalesce .Values.SERVICE_NAME }}'
-                app.kubernetes.io/name: '{{ .Values.SERVICE_NAME }}'
-                app.kubernetes.io/instance: '{{ cat .Values.SERVICE_NAME .Values.DELIMITER .Values.NAMESPACE | nospace | trunc 63 }}'
+                name: qubership-apihub-ui
+                app.kubernetes.io/name: 'qubership-apihub-ui'
                 app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
                 app.kubernetes.io/component: frontend
-                app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
-                app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
+                app.kubernetes.io/part-of: qubership-apihub
+                app.kubernetes.io/managed-by: helm
                 app.kubernetes.io/technology: 'cpp'
         spec:
             restartPolicy: Always
             terminationGracePeriodSeconds: 30
             dnsPolicy: ClusterFirst
             containers:
-            -   name: '{{ .Values.SERVICE_NAME }}'
+            -   name: 'qubership-apihub-ui'
                 image: '{{ .Values.IMAGE_REPOSITORY }}:{{ .Values.TAG }}'
                 imagePullPolicy: Always
                 ports:
@@ -97,22 +75,4 @@ spec:
                     capabilities:
                         drop:
                           - ALL
-            topologySpreadConstraints:
-            {{- if .Values.CLOUD_TOPOLOGIES }}
-            {{- range $v := .Values.CLOUD_TOPOLOGIES }}
-                        - topologyKey: {{ $v.topologyKey }}
-                          maxSkew: {{ $v.maxSkew | default 1 }}
-                          whenUnsatisfiable: {{ $v.whenUnsatisfiable | default "ScheduleAnyway" }}
-                          labelSelector:
-                            matchLabels:
-                              name: "{{ coalesce .Values.SERVICE_NAME }}"
-            {{- end }}
-            {{- else }}
-                        - maxSkew: 1
-                          topologyKey: {{ .Values.CLOUD_TOPOLOGY_KEY }}
-                          whenUnsatisfiable: ScheduleAnyway
-                          labelSelector:
-                            matchLabels:
-                              name: "{{ coalesce .Values.SERVICE_NAME }}"
-            {{- end }}
     revisionHistoryLimit: 3

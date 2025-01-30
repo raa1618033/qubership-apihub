@@ -8,14 +8,13 @@ metadata:
         nginx.ingress.kubernetes.io/proxy-read-timeout: '3600'
         nginx.ingress.kubernetes.io/proxy-send-timeout: '3600'
     labels:
-        app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
-        app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
-        deployment.netcracker.com/sessionId: '{{ .Values.DEPLOYMENT_SESSION_ID }}'
+        app.kubernetes.io/part-of: qubership-apihub
+        app.kubernetes.io/managed-by: helm
 spec:
     tls:
         - hosts:
             - '{{ .Values.DNS_ROUTE }}'
-          secretName: '{{ .Values.SERVICE }}-tls'
+          secretName: 'qubership-apihub-ui-tls'
     rules:
         -   host: '{{ .Values.DNS_ROUTE }}'
             http:
@@ -24,7 +23,7 @@ spec:
                         pathType: Prefix
                         backend:
                             service:
-                                name: '{{ .Values.SERVICE_NAME }}'
+                                name: 'qubership-apihub-ui'
                                 port:
                                     name: web
 {{- end }}

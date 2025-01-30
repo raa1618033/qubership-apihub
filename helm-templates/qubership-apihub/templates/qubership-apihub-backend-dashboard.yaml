@@ -6,9 +6,8 @@ metadata:
   name: apihub-overview-dashboard
   labels:
     app: grafana
-    app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
-    app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
-    deployment.netcracker.com/sessionId: '{{ .Values.DEPLOYMENT_SESSION_ID }}'
+    app.kubernetes.io/part-of: qubership-apihub
+    app.kubernetes.io/managed-by: helm
     app.kubernetes.io/processed-by-operator: monitoring-operator
 spec:
   name: apihub-overview.json
@@ -20,9 +19,8 @@ metadata:
   name: apihub-metrics-from-postrgres
   labels:
     app: grafana
-    app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
-    app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
-    deployment.netcracker.com/sessionId: '{{ .Values.DEPLOYMENT_SESSION_ID }}'
+    app.kubernetes.io/part-of: qubership-apihub
+    app.kubernetes.io/managed-by: helm
     app.kubernetes.io/processed-by-operator: monitoring-operator
 spec:
   name: apihub-metrics-from-postrgres.json

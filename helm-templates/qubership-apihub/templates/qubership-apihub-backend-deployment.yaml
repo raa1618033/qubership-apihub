@@ -2,63 +2,41 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-    name: '{{ .Values.SERVICE_NAME }}'
+    name: 'qubership-apihub-backend'
     labels:
-        name: '{{ .Values.SERVICE_NAME }}'
-        app.kubernetes.io/name: '{{ .Values.SERVICE_NAME }}'
-        app.kubernetes.io/instance: '{{ cat .Values.SERVICE_NAME .Values.DELIMITER .Values.NAMESPACE | nospace | trunc 63 }}'
-        app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
+        name: 'qubership-apihub-backend'
+        app.kubernetes.io/name: 'qubership-apihub-backend'
+        app.kubernetes.io/version: '{{ .Values.QUBERSHIP_APIHUB_VERSION }}'
         app.kubernetes.io/component: 'backend'
-        app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
-        app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
-        deployment.netcracker.com/sessionId: '{{ .Values.DEPLOYMENT_SESSION_ID }}'
+        app.kubernetes.io/part-of: qubership-apihub
+        app.kubernetes.io/managed-by: helm
         app.kubernetes.io/technology: 'go'
 spec:
     replicas: {{ .Values.APIHUB_REPLICAS }}
     strategy:
-        {{- if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "recreate" }}
-        type: Recreate
-        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "best_effort_controlled_rollout" }}
-        type: RollingUpdate
-        rollingUpdate:
-            maxSurge: 0
-            maxUnavailable: 80%
-        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "ramped_slow_rollout" }}
-        type: RollingUpdate
-        rollingUpdate:
-            maxSurge: 1
-            maxUnavailable: 0
-        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "custom_rollout" }}
-        type: RollingUpdate
-        rollingUpdate:
-            maxSurge: {{ .Values.DEPLOYMENT_STRATEGY_MAXSURGE | default "25%" }}
-            maxUnavailable: {{ .Values.DEPLOYMENT_STRATEGY_MAXUNAVAILABLE | default "25%" }}
-        {{- else }}
         type: RollingUpdate
         rollingUpdate:
             maxSurge: 25%
             maxUnavailable: 25%
-        {{- end }}
     template:
         metadata:
             labels:
-                name: '{{ .Values.SERVICE_NAME }}'
-                app.kubernetes.io/name: '{{ .Values.SERVICE_NAME }}'
-                app.kubernetes.io/instance: '{{ cat .Values.SERVICE_NAME .Values.DELIMITER .Values.NAMESPACE | nospace | trunc 63 }}'
-                app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
+                name: 'qubership-apihub-backend'
+                app.kubernetes.io/name: 'qubership-apihub-backend'
+                app.kubernetes.io/version: '{{ .Values.QUBERSHIP_APIHUB_VERSION }}'
                 app.kubernetes.io/component: 'backend'
-                app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
-                app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
+                app.kubernetes.io/part-of: qubership-apihub
+                app.kubernetes.io/managed-by: helm
                 app.kubernetes.io/technology: 'go'
         spec:
-            serviceAccountName: '{{ .Values.SERVICE_ACCOUNT }}'
+            serviceAccountName: 'qubership-apihub-backend'
             volumes:
             -   configMap:
                     defaultMode: 420
                     name: apihub-config
                 name: apihub-config
             containers:
-            -   name: '{{ .Values.SERVICE }}'
+            -   name: 'qubership-apihub-backend'
                 image: '{{ .Values.IMAGE_REPOSITORY }}:{{ .Values.TAG }}'
                 volumeMounts:
                 -   name: apihub-config
@@ -96,12 +74,12 @@ spec:
                 -   name: APIHUB_POSTGRESQL_USERNAME
                     valueFrom:
                       secretKeyRef:
-                         name: '{{ .Values.SERVICE }}-db-secret'
+                         name: 'qubership-apihub-backend-db-secret'
                          key: apihub_postgresql_username
                 -   name: APIHUB_POSTGRESQL_PASSWORD
                     valueFrom:
                       secretKeyRef:
-                         name: '{{ .Values.SERVICE }}-db-secret'
+                         name: 'qubership-apihub-backend-db-secret'
                          key: apihub_postgresql_password
                 -   name: NAMESPACE
                     valueFrom:
@@ -118,12 +96,12 @@ spec:
                 -   name: SAML_CRT
                     valueFrom:
                       secretKeyRef:
-                         name: '{{ .Values.SERVICE }}-saml-secret'
+                         name: 'qubership-apihub-backend-saml-secret'
                          key: saml_crt
                 -   name: SAML_KEY
                     valueFrom:
                       secretKeyRef:
-                         name: '{{ .Values.SERVICE }}-saml-secret'
+                         name: 'qubership-apihub-backend-saml-secret'
                          key: saml_key
                 -   name: EXTERNAL_LINKS
                     value: '{{ .Values.EXTERNAL_LINKS }}'
@@ -134,17 +112,17 @@ spec:
                 -   name: JWT_PRIVATE_KEY
                     valueFrom:
                       secretKeyRef:
-                         name: '{{ .Values.SERVICE }}-jwt-secret'
+                         name: 'qubership-apihub-backend-jwt-secret'
                          key: jwt_private_key
                 -   name: CLIENT_ID
                     valueFrom:
                       secretKeyRef:
-                         name: '{{ .Values.SERVICE }}-gitlab-secret'
+                         name: 'qubership-apihub-backend-gitlab-secret'
                          key: client_id
                 -   name: CLIENT_SECRET
                     valueFrom:
                       secretKeyRef:
-                         name: '{{ .Values.SERVICE }}-gitlab-secret'
+                         name: 'qubership-apihub-backend-gitlab-secret'
                          key: client_secret
                 -   name: PUBLISH_FILE_SIZE_LIMIT_MB
                     value: '{{ .Values.PUBLISH_FILE_SIZE_LIMIT_MB }}'
@@ -157,12 +135,12 @@ spec:
                 -   name: LDAP_USER
                     valueFrom:
                       secretKeyRef:
-                         name: '{{ .Values.SERVICE }}-ldap-user-secret'
+                         name: 'qubership-apihub-backend-ldap-user-secret'
                          key: ldap_user
                 -  name: LDAP_USER_PASSWORD
                    valueFrom:
                      secretKeyRef:
-                        name: '{{ .Values.SERVICE }}-ldap-user-secret'
+                        name: 'qubership-apihub-backend-ldap-user-secret'
                         key: ldap_user_password
                 -  name: SYSTEM_NOTIFICATION
                    value: '{{ .Values.SYSTEM_NOTIFICATION }}'
@@ -173,52 +151,52 @@ spec:
                 - name: STORAGE_SERVER_USERNAME
                   valueFrom:
                     secretKeyRef:
-                      name: '{{ .Values.SERVICE }}-storage-secret'
+                      name: 'qubership-apihub-backend-storage-secret'
                       key: storage_server_access_key_id
                 - name: STORAGE_SERVER_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: '{{ .Values.SERVICE }}-storage-secret'
+                      name: 'qubership-apihub-backend-storage-secret'
                       key: storage_server_secret_access_key
                 - name: STORAGE_SERVER_CRT
                   valueFrom:
                     secretKeyRef:
-                      name: '{{ .Values.SERVICE }}-storage-secret'
+                      name: 'qubership-apihub-backend-storage-secret'
                       key: storage_server_crt
                 - name: STORAGE_SERVER_URL
                   valueFrom:
                     secretKeyRef:
-                      name: '{{ .Values.SERVICE }}-storage-secret'
+                      name: 'qubership-apihub-backend-storage-secret'
                       key: storage_server_endpoint
                 - name: STORAGE_SERVER_BUCKET_NAME
                   valueFrom:
                     secretKeyRef:
-                      name: '{{ .Values.SERVICE }}-storage-secret'
+                      name: 'qubership-apihub-backend-storage-secret'
                       key: storage_server_bucket_name
                 - name: STORAGE_SERVER_ACTIVE
                   valueFrom:
                     secretKeyRef:
-                      name: '{{ .Values.SERVICE }}-storage-secret'
+                      name: 'qubership-apihub-backend-storage-secret'
                       key: storage_server_active
                 - name: STORAGE_SERVER_STORE_ONLY_BUILD_RESULT
                   valueFrom:
                     secretKeyRef:
-                      name: '{{ .Values.SERVICE }}-storage-secret'
+                      name: 'qubership-apihub-backend-storage-secret'
                       key: storage_server_store_only_build_result
                 -   name: APIHUB_ADMIN_EMAIL
                     valueFrom:
                       secretKeyRef:
-                        name: '{{ .Values.SERVICE }}-zero-day-admin-secret'
+                        name: 'qubership-apihub-backend-zero-day-admin-secret'
                         key: apihub_admin_email
                 -  name: APIHUB_ADMIN_PASSWORD
                    valueFrom:
                      secretKeyRef:
-                       name: '{{ .Values.SERVICE }}-zero-day-admin-secret'
+                       name: 'qubership-apihub-backend-zero-day-admin-secret'
                        key: apihub_admin_password
                 -  name: APIHUB_ACCESS_TOKEN
                    valueFrom:
                      secretKeyRef:
-                       name: '{{ .Values.SERVICE }}-access-token-secret'
+                       name: 'qubership-apihub-backend-access-token-secret'
                        key: token
                 -   name: APIHUB_SKIP_DB_CREATION
                     value: '{{ .Values.APIHUB_SKIP_DB_CREATION }}'
@@ -256,25 +234,7 @@ spec:
                     capabilities:
                         drop:
                           - ALL
-            topologySpreadConstraints:
-            {{- if .Values.CLOUD_TOPOLOGIES }}
-            {{- range $v := .Values.CLOUD_TOPOLOGIES }}
-                        - topologyKey: {{ $v.topologyKey }}
-                          maxSkew: {{ $v.maxSkew | default 1 }}
-                          whenUnsatisfiable: {{ $v.whenUnsatisfiable | default "ScheduleAnyway" }}
-                          labelSelector:
-                            matchLabels:
-                              name: "{{ coalesce .Values.SERVICE_NAME }}"
-            {{- end }}
-            {{- else }}
-                        - maxSkew: 1
-                          topologyKey: {{ .Values.CLOUD_TOPOLOGY_KEY }}
-                          whenUnsatisfiable: ScheduleAnyway
-                          labelSelector:
-                            matchLabels:
-                              name: "{{ coalesce .Values.SERVICE_NAME }}"
-            {{- end }}
     selector:
         matchLabels:
-            name: '{{ .Values.SERVICE_NAME }}'
+            name: 'qubership-apihub-backend'
 

@@ -1,8 +1,5 @@
-###########  объединены 3 values.yaml файла
-###########  убраны дублирующиеся записи
 
-
-
+QUBERSHIP-APIHUB_VERSION: dev
 IMAGE_REPOSITORY: #TO_BE_SET
 TAG: #TO_BE_SET
 ARTIFACT_DESCRIPTOR_VERSION: #TO_BE_SET

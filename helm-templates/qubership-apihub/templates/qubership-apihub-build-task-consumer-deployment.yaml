@@ -2,58 +2,36 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-    name: '{{ .Values.SERVICE_NAME }}'
+    name: 'qubership-apihub-build-task-consumer'
     labels:
-        name: '{{ .Values.SERVICE_NAME }}'
-        app.kubernetes.io/name: '{{ .Values.SERVICE_NAME }}'
-        app.kubernetes.io/instance: '{{ cat .Values.SERVICE_NAME .Values.DELIMITER .Values.NAMESPACE | nospace | trunc 63 }}'
-        app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
+        name: 'qubership-apihub-build-task-consumer'
+        app.kubernetes.io/name: 'qubership-apihub-build-task-consumer'
+        app.kubernetes.io/version: '{{ .Values.QUBERSHIP_APIHUB_VERSION }}'
         app.kubernetes.io/component: 'job'
-        app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
-        app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
-        deployment.netcracker.com/sessionId: '{{ .Values.DEPLOYMENT_SESSION_ID }}'
+        app.kubernetes.io/part-of: qubership-apihub
+        app.kubernetes.io/managed-by: helm
         app.kubernetes.io/technology: 'node-js'
 spec:
     replicas: {{ .Values.REPLICAS }}
     strategy:
-        {{- if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "recreate" }}
-        type: Recreate
-        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "best_effort_controlled_rollout" }}
-        type: RollingUpdate
-        rollingUpdate:
-            maxSurge: 0
-            maxUnavailable: 80%
-        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "ramped_slow_rollout" }}
-        type: RollingUpdate
-        rollingUpdate:
-            maxSurge: 1
-            maxUnavailable: 0
-        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "custom_rollout" }}
-        type: RollingUpdate
-        rollingUpdate:
-            maxSurge: {{ .Values.DEPLOYMENT_STRATEGY_MAXSURGE | default "25%" }}
-            maxUnavailable: {{ .Values.DEPLOYMENT_STRATEGY_MAXUNAVAILABLE | default "25%" }}
-        {{- else }}
         type: RollingUpdate
         rollingUpdate:
             maxSurge: 25%
             maxUnavailable: 25%
-        {{- end }}
     template:
         metadata:
             labels:
-                name: '{{ .Values.SERVICE_NAME }}'
-                app.kubernetes.io/name: '{{ .Values.SERVICE_NAME }}'
-                app.kubernetes.io/instance: '{{ cat .Values.SERVICE_NAME .Values.DELIMITER .Values.NAMESPACE | nospace | trunc 63 }}'
-                app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
+                name: 'qubership-apihub-build-task-consumer'
+                app.kubernetes.io/name: 'qubership-apihub-build-task-consumer'
+                app.kubernetes.io/version: '{{ .Values.QUBERSHIP_APIHUB_VERSION }}'
                 app.kubernetes.io/component: 'backend'
-                app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
-                app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
+                app.kubernetes.io/part-of: qubership-apihub
+                app.kubernetes.io/managed-by: helm
                 app.kubernetes.io/technology: 'node-js'
         spec:
             serviceAccountName: '{{ .Values.SERVICE_ACCOUNT }}'
             containers:
-            -   name: '{{ .Values.SERVICE }}'
+            -   name: 'qubership-apihub-build-task-consumer'
                 image: '{{ .Values.IMAGE_REPOSITORY }}:{{ .Values.TAG }}'
                 ports:
                 -   name: web
@@ -71,7 +49,7 @@ spec:
                 -   name: APIHUB_API_KEY
                     valueFrom:
                         secretKeyRef:
-                            name: '{{ .Values.SERVICE }}-api-key-secret'
+                            name: 'qubership-apihub-build-task-consumer-api-key-secret'
                             key: access_token
                 resources:
                     requests:
@@ -108,25 +86,7 @@ spec:
                     capabilities:
                         drop:
                           - ALL
-            topologySpreadConstraints:
-            {{- if .Values.CLOUD_TOPOLOGIES }}
-            {{- range $v := .Values.CLOUD_TOPOLOGIES }}
-                        - topologyKey: {{ $v.topologyKey }}
-                          maxSkew: {{ $v.maxSkew | default 1 }}
-                          whenUnsatisfiable: {{ $v.whenUnsatisfiable | default "ScheduleAnyway" }}
-                          labelSelector:
-                            matchLabels:
-                              name: "{{ coalesce .Values.SERVICE_NAME }}"
-            {{- end }}
-            {{- else }}
-                        - maxSkew: 1
-                          topologyKey: {{ .Values.CLOUD_TOPOLOGY_KEY }}
-                          whenUnsatisfiable: ScheduleAnyway
-                          labelSelector:
-                            matchLabels:
-                              name: "{{ coalesce .Values.SERVICE_NAME }}"
-            {{- end }}
     selector:
         matchLabels:
-            name: '{{ .Values.SERVICE_NAME }}'
+            name: 'qubership-apihub-build-task-consumer'
 
