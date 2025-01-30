@@ -1,0 +1,280 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+    name: '{{ .Values.SERVICE_NAME }}'
+    labels:
+        name: '{{ .Values.SERVICE_NAME }}'
+        app.kubernetes.io/name: '{{ .Values.SERVICE_NAME }}'
+        app.kubernetes.io/instance: '{{ cat .Values.SERVICE_NAME .Values.DELIMITER .Values.NAMESPACE | nospace | trunc 63 }}'
+        app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
+        app.kubernetes.io/component: 'backend'
+        app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
+        app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
+        deployment.netcracker.com/sessionId: '{{ .Values.DEPLOYMENT_SESSION_ID }}'
+        app.kubernetes.io/technology: 'go'
+spec:
+    replicas: {{ .Values.APIHUB_REPLICAS }}
+    strategy:
+        {{- if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "recreate" }}
+        type: Recreate
+        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "best_effort_controlled_rollout" }}
+        type: RollingUpdate
+        rollingUpdate:
+            maxSurge: 0
+            maxUnavailable: 80%
+        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "ramped_slow_rollout" }}
+        type: RollingUpdate
+        rollingUpdate:
+            maxSurge: 1
+            maxUnavailable: 0
+        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "custom_rollout" }}
+        type: RollingUpdate
+        rollingUpdate:
+            maxSurge: {{ .Values.DEPLOYMENT_STRATEGY_MAXSURGE | default "25%" }}
+            maxUnavailable: {{ .Values.DEPLOYMENT_STRATEGY_MAXUNAVAILABLE | default "25%" }}
+        {{- else }}
+        type: RollingUpdate
+        rollingUpdate:
+            maxSurge: 25%
+            maxUnavailable: 25%
+        {{- end }}
+    template:
+        metadata:
+            labels:
+                name: '{{ .Values.SERVICE_NAME }}'
+                app.kubernetes.io/name: '{{ .Values.SERVICE_NAME }}'
+                app.kubernetes.io/instance: '{{ cat .Values.SERVICE_NAME .Values.DELIMITER .Values.NAMESPACE | nospace | trunc 63 }}'
+                app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
+                app.kubernetes.io/component: 'backend'
+                app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
+                app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
+                app.kubernetes.io/technology: 'go'
+        spec:
+            serviceAccountName: '{{ .Values.SERVICE_ACCOUNT }}'
+            volumes:
+            -   configMap:
+                    defaultMode: 420
+                    name: apihub-config
+                name: apihub-config
+            containers:
+            -   name: '{{ .Values.SERVICE }}'
+                image: '{{ .Values.IMAGE_REPOSITORY }}:{{ .Values.TAG }}'
+                volumeMounts:
+                -   name: apihub-config
+                    mountPath: /app/apihub-service/etc/
+                    readOnly: true
+                ports:
+                -   name: web
+                    containerPort: 8080
+                    protocol: TCP
+                -   name: olric
+                    containerPort: 3320
+                    protocol: TCP
+                -   name: memberlist
+                    containerPort: 3322
+                    protocol: TCP
+                env:
+                -   name: PRODUCTION_MODE
+                    value: '{{ .Values.PRODUCTION_MODE }}'
+                -   name: LOG_LEVEL
+                    value: '{{ .Values.LOG_LEVEL }}'
+                -   name: ARTIFACT_DESCRIPTOR_VERSION
+                    value: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
+                -   name: DIFF_SERVICE_URL
+                    value: '{{ .Values.DIFF_SERVICE_URL }}'
+                -   name: GITLAB_URL
+                    value: '{{ .Values.GITLAB_URL }}'
+                -   name: DB_TYPE
+                    value: '{{ .Values.DB_TYPE }}'
+                -   name: APIHUB_POSTGRESQL_HOST
+                    value: '{{ .Values.APIHUB_POSTGRESQL_HOST }}'
+                -   name: APIHUB_POSTGRESQL_PORT
+                    value: '{{ .Values.APIHUB_POSTGRESQL_PORT }}'
+                -   name: APIHUB_POSTGRESQL_DB_NAME
+                    value: {{ if (default "" .Values.APIHUB_POSTGRESQL_DB_NAME) }} '{{ .Values.APIHUB_POSTGRESQL_DB_NAME }}' {{ else }} '{{ cat .Values.SERVICE_NAME .Values.DELIMITER .Values.NAMESPACE .Values.DELIMITER "db" | nospace | replace "-" "_" }}' {{ end }}
+                -   name: APIHUB_POSTGRESQL_USERNAME
+                    valueFrom:
+                      secretKeyRef:
+                         name: '{{ .Values.SERVICE }}-db-secret'
+                         key: apihub_postgresql_username
+                -   name: APIHUB_POSTGRESQL_PASSWORD
+                    valueFrom:
+                      secretKeyRef:
+                         name: '{{ .Values.SERVICE }}-db-secret'
+                         key: apihub_postgresql_password
+                -   name: NAMESPACE
+                    valueFrom:
+                        fieldRef:
+                            fieldPath: metadata.namespace
+                -   name: OLRIC_DISCOVERY_MODE
+                    value: 'lan'
+                -   name: OLRIC_REPLICA_COUNT
+                    value: '{{ .Values.APIHUB_REPLICAS }}'
+                -   name: ADFS_METADATA_URL
+                    value: '{{ .Values.ADFS_METADATA_URL }}'
+                -   name: APIHUB_URL
+                    value: {{ if (default "" .Values.APIHUB_URL) }} '{{ .Values.APIHUB_URL }}' {{ else }} 'https://apihub-{{ .Values.NAMESPACE }}.{{ .Values.SERVER_HOSTNAME }}' {{ end }}
+                -   name: SAML_CRT
+                    valueFrom:
+                      secretKeyRef:
+                         name: '{{ .Values.SERVICE }}-saml-secret'
+                         key: saml_crt
+                -   name: SAML_KEY
+                    valueFrom:
+                      secretKeyRef:
+                         name: '{{ .Values.SERVICE }}-saml-secret'
+                         key: saml_key
+                -   name: EXTERNAL_LINKS
+                    value: '{{ .Values.EXTERNAL_LINKS }}'
+                -   name: DEFAULT_WORKSPACE_ID
+                    value: '{{ .Values.DEFAULT_WORKSPACE_ID }}'
+                -   name: RELEASE_VERSION_PATTERN
+                    value: '{{ .Values.RELEASE_VERSION_PATTERN }}'
+                -   name: JWT_PRIVATE_KEY
+                    valueFrom:
+                      secretKeyRef:
+                         name: '{{ .Values.SERVICE }}-jwt-secret'
+                         key: jwt_private_key
+                -   name: CLIENT_ID
+                    valueFrom:
+                      secretKeyRef:
+                         name: '{{ .Values.SERVICE }}-gitlab-secret'
+                         key: client_id
+                -   name: CLIENT_SECRET
+                    valueFrom:
+                      secretKeyRef:
+                         name: '{{ .Values.SERVICE }}-gitlab-secret'
+                         key: client_secret
+                -   name: PUBLISH_FILE_SIZE_LIMIT_MB
+                    value: '{{ .Values.PUBLISH_FILE_SIZE_LIMIT_MB }}'
+                -   name: PUBLISH_ARCHIVE_SIZE_LIMIT_MB
+                    value: '{{ .Values.PUBLISH_ARCHIVE_SIZE_LIMIT_MB }}'
+                -   name: ORIGIN_ALLOWED
+                    value: '{{ .Values.ORIGIN_ALLOWED }}'
+                -   name: LDAP_SERVER
+                    value: '{{ .Values.LDAP_SERVER }}'
+                -   name: LDAP_USER
+                    valueFrom:
+                      secretKeyRef:
+                         name: '{{ .Values.SERVICE }}-ldap-user-secret'
+                         key: ldap_user
+                -  name: LDAP_USER_PASSWORD
+                   valueFrom:
+                     secretKeyRef:
+                        name: '{{ .Values.SERVICE }}-ldap-user-secret'
+                        key: ldap_user_password
+                -  name: SYSTEM_NOTIFICATION
+                   value: '{{ .Values.SYSTEM_NOTIFICATION }}'
+                -  name: INSECURE_PROXY
+                   value: '{{ .Values.INSECURE_PROXY }}'
+                - name: MONITORING_ENABLED
+                  value: '{{ .Values.MONITORING_ENABLED }}'
+                - name: STORAGE_SERVER_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: '{{ .Values.SERVICE }}-storage-secret'
+                      key: storage_server_access_key_id
+                - name: STORAGE_SERVER_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: '{{ .Values.SERVICE }}-storage-secret'
+                      key: storage_server_secret_access_key
+                - name: STORAGE_SERVER_CRT
+                  valueFrom:
+                    secretKeyRef:
+                      name: '{{ .Values.SERVICE }}-storage-secret'
+                      key: storage_server_crt
+                - name: STORAGE_SERVER_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: '{{ .Values.SERVICE }}-storage-secret'
+                      key: storage_server_endpoint
+                - name: STORAGE_SERVER_BUCKET_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: '{{ .Values.SERVICE }}-storage-secret'
+                      key: storage_server_bucket_name
+                - name: STORAGE_SERVER_ACTIVE
+                  valueFrom:
+                    secretKeyRef:
+                      name: '{{ .Values.SERVICE }}-storage-secret'
+                      key: storage_server_active
+                - name: STORAGE_SERVER_STORE_ONLY_BUILD_RESULT
+                  valueFrom:
+                    secretKeyRef:
+                      name: '{{ .Values.SERVICE }}-storage-secret'
+                      key: storage_server_store_only_build_result
+                -   name: APIHUB_ADMIN_EMAIL
+                    valueFrom:
+                      secretKeyRef:
+                        name: '{{ .Values.SERVICE }}-zero-day-admin-secret'
+                        key: apihub_admin_email
+                -  name: APIHUB_ADMIN_PASSWORD
+                   valueFrom:
+                     secretKeyRef:
+                       name: '{{ .Values.SERVICE }}-zero-day-admin-secret'
+                       key: apihub_admin_password
+                -  name: APIHUB_ACCESS_TOKEN
+                   valueFrom:
+                     secretKeyRef:
+                       name: '{{ .Values.SERVICE }}-access-token-secret'
+                       key: token
+                -   name: APIHUB_SKIP_DB_CREATION
+                    value: '{{ .Values.APIHUB_SKIP_DB_CREATION }}'
+                resources:
+                    requests:
+                        cpu: {{ .Values.CPU_REQUEST }}
+                        memory: '{{ .Values.MEMORY_LIMIT }}'
+                    limits:
+                        cpu: {{ .Values.CPU_LIMIT }}
+                        memory: '{{ .Values.MEMORY_LIMIT }}'
+                livenessProbe:
+                    httpGet:
+                        path: /live
+                        port: web
+                    initialDelaySeconds: 5
+                    periodSeconds: 10
+                    timeoutSeconds: 2
+                    failureThreshold: 2
+                readinessProbe:
+                    httpGet:
+                        path: /ready
+                        port: web
+                    initialDelaySeconds: 5
+                    periodSeconds: 5
+                    timeoutSeconds: 2
+                securityContext:
+                {{ if eq .Values.PAAS_PLATFORM "KUBERNETES" }}
+                    runAsGroup: 10001
+                {{ end }}
+                    readOnlyRootFilesystem: false
+                    runAsNonRoot: true
+                    seccompProfile:
+                        type: RuntimeDefault
+                    allowPrivilegeEscalation: false
+                    capabilities:
+                        drop:
+                          - ALL
+            topologySpreadConstraints:
+            {{- if .Values.CLOUD_TOPOLOGIES }}
+            {{- range $v := .Values.CLOUD_TOPOLOGIES }}
+                        - topologyKey: {{ $v.topologyKey }}
+                          maxSkew: {{ $v.maxSkew | default 1 }}
+                          whenUnsatisfiable: {{ $v.whenUnsatisfiable | default "ScheduleAnyway" }}
+                          labelSelector:
+                            matchLabels:
+                              name: "{{ coalesce .Values.SERVICE_NAME }}"
+            {{- end }}
+            {{- else }}
+                        - maxSkew: 1
+                          topologyKey: {{ .Values.CLOUD_TOPOLOGY_KEY }}
+                          whenUnsatisfiable: ScheduleAnyway
+                          labelSelector:
+                            matchLabels:
+                              name: "{{ coalesce .Values.SERVICE_NAME }}"
+            {{- end }}
+    selector:
+        matchLabels:
+            name: '{{ .Values.SERVICE_NAME }}'
+

@@ -1,0 +1,25 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+    name: '{{ .Values.SERVICE_NAME }}'
+    labels:
+        name: '{{ .Values.SERVICE_NAME }}'
+        app.kubernetes.io/name: '{{ .Values.SERVICE_NAME }}'
+        app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
+        app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
+        deployment.netcracker.com/sessionId: '{{ .Values.DEPLOYMENT_SESSION_ID }}'
+spec:
+    ports:
+    -   name: web
+        port: 8080
+        targetPort: 8080
+    -   name: olric
+        port: 3320
+        targetPort: 3320
+    -   name: olric-memberlist
+        port: 3322
+        targetPort: 3322
+    selector:
+        name: '{{ .Values.SERVICE_NAME }}'
+

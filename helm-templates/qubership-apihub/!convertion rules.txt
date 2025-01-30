@@ -1,0 +1,37 @@
+QUBERSHIP-APIHUB
+qubership-apihub
+qubership-apihub-backend
+qubership-apihub-build-task-consumer
+qubership-apihub-ui
+
+APPLICATION_NAME  - хардкодим значение qubership-apihub в values.yaml
+CLOUD_TOPOLOGIES - Удаляем блок где оно используется
+DEPLOYMENT_SESSION_ID - удаляем строки где оно используется
+DEPLOYMENT_STRATEGY_MAXSURGE - Удаляем блок где оно используется
+DEPLOYMENT_STRATEGY_MAXUNAVAILABLE - Удаляем блок где оно используется
+
+И эти все удаляем, прям файл HPA.yaml весь, не нужен он нам в opensource
+HPA_MAX_REPLICAS
+HPA_MIN_REPLICAS
+HPA_SCALING_DOWN_SELECT_POLICY
+HPA_SCALING_UP_SELECT_POLICY
+
+SERVICE_NAME  - hardcode  qubership-apihub-<SERVICE_NAME> 
+qubership-apihub-backend
+qubership-apihub-build-task-consumer
+qubership-apihub-ui
+
+app.kubernetes.io/instance  - удалить
+
+app.kubernetes.io/version  - '{{ .Values.QUBERSHIP-APIHUB_VERSION }}'
+задать в value.yaml QUBERSHIP-APIHUB_VERSION: dev
+
+app.kubernetes.io/part-of  - hardcode QUBERSHIP-APIHUB
+
+app.kubernetes.io/managed-by - hardcode HELM
+
+deployment.netcracker.com/sessionId - удалить
+
+
+
+

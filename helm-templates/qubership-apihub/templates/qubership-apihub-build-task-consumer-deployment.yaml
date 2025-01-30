@@ -1,0 +1,132 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+    name: '{{ .Values.SERVICE_NAME }}'
+    labels:
+        name: '{{ .Values.SERVICE_NAME }}'
+        app.kubernetes.io/name: '{{ .Values.SERVICE_NAME }}'
+        app.kubernetes.io/instance: '{{ cat .Values.SERVICE_NAME .Values.DELIMITER .Values.NAMESPACE | nospace | trunc 63 }}'
+        app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
+        app.kubernetes.io/component: 'job'
+        app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
+        app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
+        deployment.netcracker.com/sessionId: '{{ .Values.DEPLOYMENT_SESSION_ID }}'
+        app.kubernetes.io/technology: 'node-js'
+spec:
+    replicas: {{ .Values.REPLICAS }}
+    strategy:
+        {{- if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "recreate" }}
+        type: Recreate
+        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "best_effort_controlled_rollout" }}
+        type: RollingUpdate
+        rollingUpdate:
+            maxSurge: 0
+            maxUnavailable: 80%
+        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "ramped_slow_rollout" }}
+        type: RollingUpdate
+        rollingUpdate:
+            maxSurge: 1
+            maxUnavailable: 0
+        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "custom_rollout" }}
+        type: RollingUpdate
+        rollingUpdate:
+            maxSurge: {{ .Values.DEPLOYMENT_STRATEGY_MAXSURGE | default "25%" }}
+            maxUnavailable: {{ .Values.DEPLOYMENT_STRATEGY_MAXUNAVAILABLE | default "25%" }}
+        {{- else }}
+        type: RollingUpdate
+        rollingUpdate:
+            maxSurge: 25%
+            maxUnavailable: 25%
+        {{- end }}
+    template:
+        metadata:
+            labels:
+                name: '{{ .Values.SERVICE_NAME }}'
+                app.kubernetes.io/name: '{{ .Values.SERVICE_NAME }}'
+                app.kubernetes.io/instance: '{{ cat .Values.SERVICE_NAME .Values.DELIMITER .Values.NAMESPACE | nospace | trunc 63 }}'
+                app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
+                app.kubernetes.io/component: 'backend'
+                app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
+                app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
+                app.kubernetes.io/technology: 'node-js'
+        spec:
+            serviceAccountName: '{{ .Values.SERVICE_ACCOUNT }}'
+            containers:
+            -   name: '{{ .Values.SERVICE }}'
+                image: '{{ .Values.IMAGE_REPOSITORY }}:{{ .Values.TAG }}'
+                ports:
+                -   name: web
+                    containerPort: 3000
+                    protocol: TCP
+                env:
+                -   name: LOG_LEVEL
+                    value: '{{ .Values.LOG_LEVEL }}'
+                -   name: APIHUB_BACKEND_ADDRESS
+                    value: '{{ .Values.APIHUB_BACKEND_ADDRESS }}'
+                -   name: FOLDER_STORE
+                    value: '{{ .Values.FOLDER_STORE }}'
+                - name: OPERATIONS_BUILD_BATCH
+                  value: '{{ .Values.OPERATIONS_BUILD_BATCH }}'
+                -   name: APIHUB_API_KEY
+                    valueFrom:
+                        secretKeyRef:
+                            name: '{{ .Values.SERVICE }}-api-key-secret'
+                            key: access_token
+                resources:
+                    requests:
+                        cpu: {{ .Values.CPU_REQUEST }}
+                        memory: '{{ .Values.MEMORY_REQUEST }}'
+                    limits:
+                        cpu: {{ .Values.CPU_LIMIT }}
+                        memory: '{{ .Values.MEMORY_LIMIT }}'
+                livenessProbe:
+                    httpGet:
+                        path: /swagger
+                        port: web
+                    initialDelaySeconds: 15
+                    timeoutSeconds: 600
+                    periodSeconds: 60
+                    failureThreshold: 5
+                readinessProbe:
+                    httpGet:
+                        path: /swagger
+                        port: web
+                    initialDelaySeconds: 15
+                    timeoutSeconds: 600
+                    periodSeconds: 60
+                    failureThreshold: 5
+                securityContext:
+                {{ if eq .Values.PAAS_PLATFORM "KUBERNETES" }}
+                    runAsGroup: 10001
+                {{ end }}
+                    readOnlyRootFilesystem: false
+                    runAsNonRoot: true
+                    seccompProfile:
+                        type: RuntimeDefault
+                    allowPrivilegeEscalation: false
+                    capabilities:
+                        drop:
+                          - ALL
+            topologySpreadConstraints:
+            {{- if .Values.CLOUD_TOPOLOGIES }}
+            {{- range $v := .Values.CLOUD_TOPOLOGIES }}
+                        - topologyKey: {{ $v.topologyKey }}
+                          maxSkew: {{ $v.maxSkew | default 1 }}
+                          whenUnsatisfiable: {{ $v.whenUnsatisfiable | default "ScheduleAnyway" }}
+                          labelSelector:
+                            matchLabels:
+                              name: "{{ coalesce .Values.SERVICE_NAME }}"
+            {{- end }}
+            {{- else }}
+                        - maxSkew: 1
+                          topologyKey: {{ .Values.CLOUD_TOPOLOGY_KEY }}
+                          whenUnsatisfiable: ScheduleAnyway
+                          labelSelector:
+                            matchLabels:
+                              name: "{{ coalesce .Values.SERVICE_NAME }}"
+            {{- end }}
+    selector:
+        matchLabels:
+            name: '{{ .Values.SERVICE_NAME }}'
+

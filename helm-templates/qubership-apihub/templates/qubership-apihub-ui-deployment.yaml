@@ -1,0 +1,118 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+    name: '{{ coalesce .Values.SERVICE_NAME }}'
+    labels:
+        name: '{{ coalesce .Values.SERVICE_NAME }}'
+        app.kubernetes.io/name: '{{ .Values.SERVICE_NAME }}'
+        app.kubernetes.io/instance: '{{ cat .Values.SERVICE_NAME .Values.DELIMITER .Values.NAMESPACE | nospace | trunc 63 }}'
+        app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
+        app.kubernetes.io/component: frontend
+        app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
+        app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
+        deployment.netcracker.com/sessionId: '{{ .Values.DEPLOYMENT_SESSION_ID }}'
+        app.kubernetes.io/technology: 'cpp'
+spec:
+    selector:
+        matchLabels:
+          name: '{{ coalesce .Values.SERVICE_NAME }}'
+    replicas: {{ .Values.REPLICAS }}
+    strategy:
+        {{- if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "recreate" }}
+        type: Recreate
+        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "best_effort_controlled_rollout" }}
+        type: RollingUpdate
+        rollingUpdate:
+            maxSurge: 0
+            maxUnavailable: 80%
+        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "ramped_slow_rollout" }}
+        type: RollingUpdate
+        rollingUpdate:
+            maxSurge: 1
+            maxUnavailable: 0
+        {{- else if eq (default "" .Values.DEPLOYMENT_STRATEGY_TYPE) "custom_rollout" }}
+        type: RollingUpdate
+        rollingUpdate:
+            maxSurge: {{ .Values.DEPLOYMENT_STRATEGY_MAXSURGE | default "25%" }}
+            maxUnavailable: {{ .Values.DEPLOYMENT_STRATEGY_MAXUNAVAILABLE | default "25%" }}
+        {{- else }}
+        type: RollingUpdate
+        rollingUpdate:
+            maxSurge: 25%
+            maxUnavailable: 25%
+        {{- end }}
+    template:
+        metadata:
+            labels:
+                name: '{{ coalesce .Values.SERVICE_NAME }}'
+                app.kubernetes.io/name: '{{ .Values.SERVICE_NAME }}'
+                app.kubernetes.io/instance: '{{ cat .Values.SERVICE_NAME .Values.DELIMITER .Values.NAMESPACE | nospace | trunc 63 }}'
+                app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
+                app.kubernetes.io/component: frontend
+                app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
+                app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
+                app.kubernetes.io/technology: 'cpp'
+        spec:
+            restartPolicy: Always
+            terminationGracePeriodSeconds: 30
+            dnsPolicy: ClusterFirst
+            containers:
+            -   name: '{{ .Values.SERVICE_NAME }}'
+                image: '{{ .Values.IMAGE_REPOSITORY }}:{{ .Values.TAG }}'
+                imagePullPolicy: Always
+                ports:
+                -   name: web
+                    containerPort: 8080
+                    protocol: TCP
+                env:
+{{ include "env.template" . | indent 16 }}
+                resources:
+                    requests:
+                        cpu: '{{ .Values.CPU_REQUEST }}'
+                        memory: '{{ .Values.MEMORY_REQUEST }}'
+                    limits:
+                        memory: '{{ .Values.MEMORY_LIMIT }}'
+                        cpu: {{ .Values.CPU_LIMIT }}
+                livenessProbe:
+                  httpGet:
+                    path: /probes/live
+                    port: web
+                  initialDelaySeconds: 5
+                  timeoutSeconds: 15
+                readinessProbe:
+                  httpGet:
+                    path: /probes/ready
+                    port: web
+                  initialDelaySeconds: 5
+                securityContext:
+                {{ if eq .Values.PAAS_PLATFORM "KUBERNETES" }}
+                    runAsGroup: 10001
+                {{ end }}
+                    readOnlyRootFilesystem: false
+                    runAsNonRoot: true
+                    seccompProfile:
+                        type: RuntimeDefault
+                    allowPrivilegeEscalation: false
+                    capabilities:
+                        drop:
+                          - ALL
+            topologySpreadConstraints:
+            {{- if .Values.CLOUD_TOPOLOGIES }}
+            {{- range $v := .Values.CLOUD_TOPOLOGIES }}
+                        - topologyKey: {{ $v.topologyKey }}
+                          maxSkew: {{ $v.maxSkew | default 1 }}
+                          whenUnsatisfiable: {{ $v.whenUnsatisfiable | default "ScheduleAnyway" }}
+                          labelSelector:
+                            matchLabels:
+                              name: "{{ coalesce .Values.SERVICE_NAME }}"
+            {{- end }}
+            {{- else }}
+                        - maxSkew: 1
+                          topologyKey: {{ .Values.CLOUD_TOPOLOGY_KEY }}
+                          whenUnsatisfiable: ScheduleAnyway
+                          labelSelector:
+                            matchLabels:
+                              name: "{{ coalesce .Values.SERVICE_NAME }}"
+            {{- end }}
+    revisionHistoryLimit: 3

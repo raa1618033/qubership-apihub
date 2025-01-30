@@ -1,0 +1,20 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+    name: '{{ coalesce .Values.SERVICE_NAME }}'
+    labels:
+        name: '{{ coalesce .Values.SERVICE_NAME }}'
+        app.kubernetes.io/name: '{{ .Values.SERVICE_NAME }}'
+        app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
+        app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
+        app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
+        deployment.netcracker.com/sessionId: '{{ .Values.DEPLOYMENT_SESSION_ID }}'
+spec:
+    ports:
+    -   name: web
+        port: 8080
+        targetPort: 8080
+    selector:
+      name: '{{ coalesce .Values.SERVICE_NAME }}'
+

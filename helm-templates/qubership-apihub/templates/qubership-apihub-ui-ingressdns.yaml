@@ -1,0 +1,30 @@
+{{- if .Values.DNS_ROUTE_ENABLE }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    name: apihub-tls
+    annotations:
+        nginx.ingress.kubernetes.io/proxy-connect-timeout: '3600'
+        nginx.ingress.kubernetes.io/proxy-read-timeout: '3600'
+        nginx.ingress.kubernetes.io/proxy-send-timeout: '3600'
+    labels:
+        app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
+        app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
+        deployment.netcracker.com/sessionId: '{{ .Values.DEPLOYMENT_SESSION_ID }}'
+spec:
+    tls:
+        - hosts:
+            - '{{ .Values.DNS_ROUTE }}'
+          secretName: '{{ .Values.SERVICE }}-tls'
+    rules:
+        -   host: '{{ .Values.DNS_ROUTE }}'
+            http:
+                paths:
+                    -   path: /
+                        pathType: Prefix
+                        backend:
+                            service:
+                                name: '{{ .Values.SERVICE_NAME }}'
+                                port:
+                                    name: web
+{{- end }}

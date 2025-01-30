@@ -1,0 +1,11 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+    name: apihub-config
+    labels:
+        app.kubernetes.io/part-of: '{{ .Values.APPLICATION_NAME }}'
+        app.kubernetes.io/managed-by: '{{ .Values.MANAGED_BY }}'
+        deployment.netcracker.com/sessionId: '{{ .Values.DEPLOYMENT_SESSION_ID }}'
+data:
+    config.yml: placeholder
