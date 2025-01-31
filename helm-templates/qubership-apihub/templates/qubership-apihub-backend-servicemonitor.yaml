@@ -1,4 +1,4 @@
-{{ if .Values.MONITORING_ENABLED }}
+{{ if .Values.qubership-apihub-backend.monitoring-enabled }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor

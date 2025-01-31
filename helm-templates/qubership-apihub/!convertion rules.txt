@@ -5,10 +5,10 @@ qubership-apihub-build-task-consumer
 qubership-apihub-ui
 
 APPLICATION_NAME  - хардкодим значение qubership-apihub в values.yaml
-CLOUD_TOPOLOGIES - Удаляем блок где оно используется
-DEPLOYMENT_SESSION_ID - удаляем строки где оно используется
-DEPLOYMENT_STRATEGY_MAXSURGE - Удаляем блок где оно используется
-DEPLOYMENT_STRATEGY_MAXUNAVAILABLE - Удаляем блок где оно используется
+!done  CLOUD_TOPOLOGIES - Удаляем блок где оно используется
+!done  DEPLOYMENT_SESSION_ID - удаляем строки где оно используется
+!done  DEPLOYMENT_STRATEGY_MAXSURGE - Удаляем блок где оно используется
+!done  DEPLOYMENT_STRATEGY_MAXUNAVAILABLE - Удаляем блок где оно используется
 
 И эти все удаляем, прям файл HPA.yaml весь, не нужен он нам в opensource
 HPA_MAX_REPLICAS
@@ -16,21 +16,21 @@ HPA_MIN_REPLICAS
 HPA_SCALING_DOWN_SELECT_POLICY
 HPA_SCALING_UP_SELECT_POLICY
 
-SERVICE_NAME  - hardcode  qubership-apihub-<SERVICE_NAME> 
+!done  SERVICE_NAME, SERVICE  - hardcode  qubership-apihub-<SERVICE_NAME> 
 qubership-apihub-backend
 qubership-apihub-build-task-consumer
 qubership-apihub-ui
 
-app.kubernetes.io/instance  - удалить
+!done  app.kubernetes.io/instance  - удалить
 
-app.kubernetes.io/version  - '{{ .Values.QUBERSHIP-APIHUB_VERSION }}'
+!done  app.kubernetes.io/version  - '{{ .Values.QUBERSHIP_APIHUB_VERSION }}'
 задать в value.yaml QUBERSHIP-APIHUB_VERSION: dev
 
-app.kubernetes.io/part-of  - hardcode QUBERSHIP-APIHUB
+!done  app.kubernetes.io/part-of  - hardcode qubership-apihub
 
-app.kubernetes.io/managed-by - hardcode HELM
+!done  app.kubernetes.io/managed-by - hardcode helm
 
-deployment.netcracker.com/sessionId - удалить
+!done  deployment.netcracker.com/sessionId - удалить
 
 
 
