@@ -39,7 +39,7 @@ spec:
                     protocol: TCP
                 env:
                 -   name: LOG_LEVEL
-                    value: '{{ .Values.LOG_LEVEL }}'
+                    value: '{{ .Values.qubership-apihub.log-level }}'
                 -   name: APIHUB_BACKEND_ADDRESS
                     value: '{{ .Values.APIHUB_BACKEND_ADDRESS }}'
                 -   name: FOLDER_STORE
@@ -53,11 +53,11 @@ spec:
                             key: access_token
                 resources:
                     requests:
-                        cpu: {{ .Values.CPU_REQUEST }}
-                        memory: '{{ .Values.MEMORY_REQUEST }}'
+                        cpu: {{ .Values.qubership-apihub-build-task-consumer.resource.cpu.request }}
+                        memory: '{{ .Values.qubership-apihub-build-task-consumer.resource.memory.request }}'
                     limits:
-                        cpu: {{ .Values.CPU_LIMIT }}
-                        memory: '{{ .Values.MEMORY_LIMIT }}'
+                        cpu: {{ .Values.qubership-apihub-build-task-consumer.resource.cpu.limit }}
+                        memory: '{{ .Values.qubership-apihub-build-task-consumer.resource.memory.limit }}'
                 livenessProbe:
                     httpGet:
                         path: /swagger

@@ -1,21 +1,24 @@
 
-qubership-apihub-version: dev
+qubership-apihub:
+  version: dev
+  namespace: '' #TO_BE_SET
+  log-level: "INFO"
+  paas-platform: "KUBERNETES"
+  paas-version: '1.29'
+
+
 IMAGE_REPOSITORY: #TO_BE_SET
 TAG: #TO_BE_SET
 artifact-descriptor-version: #TO_BE_SET
-paas-platform: "KUBERNETES"
-paas-version: '1.29'
 CLOUD_TOPOLOGY_KEY: kubernetes.io/hostname
 PART_OF: 'API-HUB'
 DELIMITER: '-'
-NAMESPACE: '' #TO_BE_SET
-log-level: "INFO"
 PRODUCTION_MODE: false
 APIHUB_ACCESS_TOKEN: 'uHw6L2LnuxY5z46qcVnN7fv7zaW6FpthbuG8wVYeYmYKzQjGeddVeFwdDHy1zGyB'
 LDAP_SERVER: ''
 LDAP_USER: ''
 LDAP_USER_PASSWORD: ''
-MANAGED_BY: 'saasDeployer'
+
 ADFS_METADATA_URL: '' #TO_BE_SET
 APIHUB_URL: '' #TO_BE_SET
 
@@ -36,7 +39,6 @@ qubership-apihub-backend:
       limit: "1"
     memory:
      limit: "512Mi"
-  
   env:  
     production-mode: true
     deployment-resource-name: "qubership-apihub-backend"
@@ -82,14 +84,17 @@ APIHUB_ADMIN_PASSWORD: 'Tmf@c23s'
 
 
 #####apihub-node-service
-
-"MEMORY_LIMIT": "4200Mi"
-"MEMORY_REQUEST": "750Mi"
-CPU_REQUEST: "100m"
-CPU_LIMIT: "1.25"
-REPLICAS: 1
-
-
+qubership-apihub-build-task-consumer:
+  replicas: 1  
+  resource:
+    cpu:
+      request: "100m"
+      limit: "1.25"
+    memory:
+     limit: "4200Mi"
+     request: "750Mi"
+     
+     
 SERVICE: "apihub-node-service"
 SERVICE_NAME: "apihub-node-service"
 DEPLOYMENT_RESOURCE_NAME: "apihub-node-service"
@@ -102,27 +107,42 @@ FOLDER_STORE: "/tmp"
 OPERATIONS_BUILD_BATCH: "16"
  
 #####apihub-ui 
+qubership-apihub-ui:
+  replicas: 1  
+  resource:
+    cpu:
+      request: "30m"
+      limit: "1"
+    memory:
+     limit: "64Mi"
+     request: "64Mi"
+
+  ingress:
+    ...
+  dns-ingress:
+     enabled: true
+     dns-route: ''
+     URL: 
+     tls-secret:
+       tls-certificate: ''
+       tls-certificate-key: ''
+
 # Names
-SERVER_HOSTNAME: ''
-SERVICE: "apihub-ui"
-SERVICE_NAME: "apihub-ui"
-DEPLOYMENT_RESOURCE_NAME: "apihub-ui"
+###  SERVER_HOSTNAME: ''                      ###  ==> qubership-apihub-ui.server_hostname: ''                  
+###  SERVICE: "apihub-ui"                     ###  ==> qubership-apihub-ui.service: "qubership-apihub-ui"                 
+###  SERVICE_NAME: "apihub-ui"                ###  ==> qubership-apihub-ui.service_name: "qubership-apihub-ui"            
+###  DEPLOYMENT_RESOURCE_NAME: "apihub-ui"    ###  ==> qubership-apihub-ui.deployment_resource_name: "qubership-apihub-ui"
 
 # SSL
-CERTIFICATE_BUNDLE_MD5SUM: "d41d8cd98f00b204e9800998ecf8427e"
-SSL_SECRET: "defaultsslcertificate"
+#####  Not used ???    CERTIFICATE_BUNDLE_MD5SUM: "d41d8cd98f00b204e9800998ecf8427e"
+#####  Not used ???    SSL_SECRET: "defaultsslcertificate"
 
-# Run params and limits
-CPU_LIMIT: 1
-CPU_REQUEST: "30m"
-MEMORY_LIMIT: "64Mi"
-MEMORY_REQUEST: "64Mi"
-REPLICAS: 1
 
-DNS_ROUTE_ENABLE: false
-TLS_CRT: ''
-TLS_KEY: ''
-DNS_ROUTE: ''
+###  DNS_ROUTE_ENABLE: false             ###  ==> qubership-apihub-ui.dns-ingress.enabled
+###  TLS_CRT: ''                         ###  ==> qubership-apihub-ui.dns-ingress.tls-secret.tls-certificate 
+###  TLS_KEY: ''                         ###  ==> qubership-apihub-ui.dns-ingress.tls-secret.tls-certificate-key 
+###  DNS_ROUTE: ''                       ###  ==> qubership-apihub-ui.dns-ingress.dns-route 
+
 
 # Docker repository
 

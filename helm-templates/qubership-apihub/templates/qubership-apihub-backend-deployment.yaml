@@ -6,7 +6,7 @@ metadata:
     labels:
         name: 'qubership-apihub-backend'
         app.kubernetes.io/name: 'qubership-apihub-backend'
-        app.kubernetes.io/version: '{{ .Values.qubership-apihub-version }}'
+        app.kubernetes.io/version: '{{ .Values.qubership-apihub.version }}'
         app.kubernetes.io/component: 'backend'
         app.kubernetes.io/part-of: qubership-apihub
         app.kubernetes.io/managed-by: helm
@@ -23,7 +23,7 @@ spec:
             labels:
                 name: 'qubership-apihub-backend'
                 app.kubernetes.io/name: 'qubership-apihub-backend'
-                app.kubernetes.io/version: '{{ .Values.qubership-apihub-version }}'
+                app.kubernetes.io/version: '{{ .Values.qubership-apihub.version }}'
                 app.kubernetes.io/component: 'backend'
                 app.kubernetes.io/part-of: qubership-apihub
                 app.kubernetes.io/managed-by: helm
@@ -70,7 +70,7 @@ spec:
                 -   name: APIHUB_POSTGRESQL_PORT
                     value: '{{ .Values.qubership-apihub-backend.env.db-port }}'
                 -   name: APIHUB_POSTGRESQL_DB_NAME
-                    value: {{ if (default "" .Values.qubership-apihub-backend.env.db-name) }} '{{ .Values.qubership-apihub-backend.env.db-name }}' {{ else }} '{{ cat .Values.SERVICE_NAME .Values.DELIMITER .Values.NAMESPACE .Values.DELIMITER "db" | nospace | replace "-" "_" }}' {{ end }}
+                    value: {{ if (default "" .Values.qubership-apihub-backend.env.db-name) }} '{{ .Values.qubership-apihub-backend.env.db-name }}' {{ else }} '{{ cat qubership-apihub-backend .Values.DELIMITER .Values.qubership-apihub.namespace .Values.DELIMITER "db" | nospace | replace "-" "_" }}' {{ end }}
                 -   name: APIHUB_POSTGRESQL_USERNAME
                     valueFrom:
                       secretKeyRef:
@@ -92,7 +92,7 @@ spec:
                 -   name: ADFS_METADATA_URL
                     value: '{{ .Values.ADFS_METADATA_URL }}'
                 -   name: APIHUB_URL
-                    value: {{ if (default "" .Values.APIHUB_URL) }} '{{ .Values.APIHUB_URL }}' {{ else }} 'https://apihub-{{ .Values.NAMESPACE }}.{{ .Values.SERVER_HOSTNAME }}' {{ end }}
+                    value: {{ if (default "" .Values.APIHUB_URL) }} '{{ .Values.APIHUB_URL }}' {{ else }} 'https://apihub-{{ .Values.qubership-apihub.namespace }}.{{ .Values.SERVER_HOSTNAME }}' {{ end }}
                 -   name: SAML_CRT
                     valueFrom:
                       secretKeyRef:

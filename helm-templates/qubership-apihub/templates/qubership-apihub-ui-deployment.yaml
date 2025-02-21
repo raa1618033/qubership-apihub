@@ -47,11 +47,11 @@ spec:
 {{ include "env.template" . | indent 16 }}
                 resources:
                     requests:
-                        cpu: '{{ .Values.CPU_REQUEST }}'
-                        memory: '{{ .Values.MEMORY_REQUEST }}'
+                        cpu: '{{ .Values.qubership-apihub-ui.resource.cpu.request }}'
+                        memory: '{{ .Values.qubership-apihub-ui.resource.memory.request }}'
                     limits:
-                        memory: '{{ .Values.MEMORY_LIMIT }}'
-                        cpu: {{ .Values.CPU_LIMIT }}
+                        memory: '{{ .Values.qubership-apihub-ui.resource.memory.limit }}'
+                        cpu: {{ .Values.qubership-apihub-ui.resource.cpu.limit }}
                 livenessProbe:
                   httpGet:
                     path: /probes/live

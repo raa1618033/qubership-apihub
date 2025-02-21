@@ -1,4 +1,4 @@
-{{- if .Values.DNS_ROUTE_ENABLE }}
+{{- if .Values.qubership-apihub-ui.dns-ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -13,10 +13,10 @@ metadata:
 spec:
     tls:
         - hosts:
-            - '{{ .Values.DNS_ROUTE }}'
+            - '{{ .Values.qubership-apihub-ui.dns-ingress.dns-route }}'
           secretName: 'qubership-apihub-ui-tls'
     rules:
-        -   host: '{{ .Values.DNS_ROUTE }}'
+        -   host: '{{ .Values.qubership-apihub-ui.dns-ingress.dns-route }}'
             http:
                 paths:
                     -   path: /

@@ -5,16 +5,32 @@ qubership-apihub-build-task-consumer
 qubership-apihub-ui
 
 APPLICATION_NAME  - хардкодим значение qubership-apihub в values.yaml
+
 !done  CLOUD_TOPOLOGIES - Удаляем блок где оно используется
 !done  DEPLOYMENT_SESSION_ID - удаляем строки где оно используется
 !done  DEPLOYMENT_STRATEGY_MAXSURGE - Удаляем блок где оно используется
 !done  DEPLOYMENT_STRATEGY_MAXUNAVAILABLE - Удаляем блок где оно используется
 
+!done
 И эти все удаляем, прям файл HPA.yaml весь, не нужен он нам в opensource
 HPA_MAX_REPLICAS
 HPA_MIN_REPLICAS
 HPA_SCALING_DOWN_SELECT_POLICY
 HPA_SCALING_UP_SELECT_POLICY
+
+!done
+'{{ .Values.SERVICE }}' - надо хардкодить соответствующее имя сервиса  
+qubership-apihub-backend
+qubership-apihub-build-task-consumer
+qubership-apihub-ui
+
+!done
+'{{ .Values.NAMESPACE }}' - а это надо выносить в values.yaml
+оно олицетворяет неймспейс в который мы будем деплоиться, то есть это вполне себе параметр деплоймента
+qubership-apihub.namespace: '' #TO_BE_SET
+
+
+
 
 !done  SERVICE_NAME, SERVICE  - hardcode  qubership-apihub-<SERVICE_NAME> 
 qubership-apihub-backend
@@ -24,7 +40,10 @@ qubership-apihub-ui
 !done  app.kubernetes.io/instance  - удалить
 
 !done  app.kubernetes.io/version  - '{{ .Values.QUBERSHIP_APIHUB_VERSION }}'
-задать в value.yaml QUBERSHIP-APIHUB_VERSION: dev
+       задать в value.yaml QUBERSHIP-APIHUB_VERSION: dev
+       updated to  qubership-apihub.version: dev
+
+
 
 !done  app.kubernetes.io/part-of  - hardcode qubership-apihub
 
@@ -32,6 +51,23 @@ qubership-apihub-ui
 
 !done  deployment.netcracker.com/sessionId - удалить
 
+############
+###qubership-apihub-ui:
+   
+qubership-apihub-ui-secrettls.yaml
+qubership-apihub-ui-ingressdns.yaml
 
 
+!done   DNS_ROUTE_ENABLE  ==> qubership-apihub-ui.dns-ingress.enabled
+!done   TLS_CRT           ==> qubership-apihub-ui.dns-ingress.tls-secret.tls-certificate 
+!done   TLS_KEY           ==> qubership-apihub-ui.dns-ingress.tls-secret.tls-certificate-key 
+!done   DNS_ROUTE         ==> qubership-apihub-ui.dns-ingress.dns-route 
 
+!done   SERVER_HOSTNAME: ''                      ###  ==> qubership-apihub-ui.server_hostname: ''                  
+###  SERVICE: "apihub-ui"                     ###  ==> qubership-apihub-ui.service: "qubership-apihub-ui"                 
+###  SERVICE_NAME: "apihub-ui"                ###  ==> qubership-apihub-ui.service_name: "qubership-apihub-ui"            
+###  DEPLOYMENT_RESOURCE_NAME: "apihub-ui"    ###  ==> qubership-apihub-ui.deployment_resource_name: "qubership-apihub-ui"
+##############
+
+
+!done    LOG_LEVEL ==> qubership-apihub.log-level: "INFO"
