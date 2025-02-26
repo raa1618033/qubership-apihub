@@ -6,7 +6,7 @@ metadata:
     labels:
         name: qubership-apihub-ui
         app.kubernetes.io/name: 'qubership-apihub-ui'
-        app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
+#        app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
         app.kubernetes.io/component: frontend
         app.kubernetes.io/part-of: qubership-apihub
         app.kubernetes.io/managed-by: helm
@@ -15,7 +15,7 @@ spec:
     selector:
         matchLabels:
           name: qubership-apihub-ui
-    replicas: {{ .Values.REPLICAS }}
+    replicas: {{ .Values.qubership-apihub-ui.replicas }}
     strategy:
         type: RollingUpdate
         rollingUpdate:
@@ -26,7 +26,7 @@ spec:
             labels:
                 name: qubership-apihub-ui
                 app.kubernetes.io/name: 'qubership-apihub-ui'
-                app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
+#                app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
                 app.kubernetes.io/component: frontend
                 app.kubernetes.io/part-of: qubership-apihub
                 app.kubernetes.io/managed-by: helm
@@ -37,14 +37,30 @@ spec:
             dnsPolicy: ClusterFirst
             containers:
             -   name: 'qubership-apihub-ui'
-                image: '{{ .Values.IMAGE_REPOSITORY }}:{{ .Values.TAG }}'
+                image: '{{ .Values.qubership-apihub-ui.image-repository }}:{{ .Values.qubership-apihub-ui.tag }}'
                 imagePullPolicy: Always
                 ports:
                 -   name: web
                     containerPort: 8080
                     protocol: TCP
                 env:
-{{ include "env.template" . | indent 16 }}
+#{{ include "env.template" . | indent 16 }}
+                {{- define "env.template" -}}
+                -   name: CERTIFICATE_BUNDLE_{{ .Values.qubership-apihub-ui.env.ssl.ssl-secret }}_MD5SUM
+                    value: '{{ .Values.qubership-apihub-ui.env.ssl.certificate-bundle-md5sum }}'
+                -   name: NAMESPACE
+                    value: '{{ .Values.qubership-apihub.namespace }}'
+                -   name: MICROSERVICE_NAME
+                    value: 'qubership-apihub-ui'
+                -   name: CLOUD_SERVICE_NAME
+                    value: 'qubership-apihub-ui'
+                -   name: CLOUD_NAMESPACE
+                    valueFrom:
+                        fieldRef:
+                            fieldPath: metadata.namespace
+                - name: APIHUB_BACKEND_ADDRESS
+                  value: '{{ .Values.qubership-apihub-ui.apihub-backend-address }}'
+                {{- end -}}
                 resources:
                     requests:
                         cpu: '{{ .Values.qubership-apihub-ui.resource.cpu.request }}'
@@ -64,7 +80,7 @@ spec:
                     port: web
                   initialDelaySeconds: 5
                 securityContext:
-                {{ if eq .Values.PAAS_PLATFORM "KUBERNETES" }}
+                {{ if eq .Values.qubership-apihub.paas-platform "KUBERNETES" }}
                     runAsGroup: 10001
                 {{ end }}
                     readOnlyRootFilesystem: false

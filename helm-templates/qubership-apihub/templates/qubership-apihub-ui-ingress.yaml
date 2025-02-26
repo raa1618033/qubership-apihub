@@ -11,7 +11,7 @@ metadata:
         app.kubernetes.io/managed-by: helm
 spec:
     rules:
-        -   host: 'apihub-{{ .Values.qubership-apihub.namespace }}.{{ .Values.qubership-apihub-ui.server_hostname }}'
+        -   host: 'apihub-{{ .Values.qubership-apihub.namespace }}.{{ .Values.qubership-apihub-ui.server-hostname }}'
             http:
                 paths:
                     -   path: /

@@ -37,7 +37,7 @@ spec:
                 name: qubership-apihub-config
             containers:
             -   name: 'qubership-apihub-backend'
-                image: '{{ .Values.IMAGE_REPOSITORY }}:{{ .Values.TAG }}'
+                image: '{{ .Values.qubership-apihub-backend.image-repository }}:{{ .Values.qubership-apihub-backend.tag }}'
                 volumeMounts:
                 -   name: qubership-apihub-config
                     mountPath: /app/qubership-apihub-service/etc/
@@ -56,13 +56,13 @@ spec:
                 -   name: production-mode
                     value: '{{ .Values.qubership-apihub-backend.env.production-mode  }}'
                 -   name: log-level
-                    value: '{{ .Values.log-level }}'
-                -   name: artifact-descriptor-version
-                    value: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
+                    value: '{{ .Values.qubership-apihub.log-level }}'
+#                -   name: artifact-descriptor-version
+#                    value: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
                 -   name: DIFF_SERVICE_URL
-                    value: '{{ .Values.DIFF_SERVICE_URL }}'
+                    value: '{{ .Values.qubership-apihub-backend.env.diff-service-url }}'
                 -   name: GITLAB_URL
-                    value: '{{ .Values.GITLAB_URL }}'
+                    value: '{{ .Values.qubership-apihub-backend.env.gitlab-url }}'
                 -   name: db-type
                     value: '{{ .Values.qubership-apihub-backend.env.db-type }}'
                 -   name: APIHUB_POSTGRESQL_HOST
@@ -70,7 +70,7 @@ spec:
                 -   name: APIHUB_POSTGRESQL_PORT
                     value: '{{ .Values.qubership-apihub-backend.env.db-port }}'
                 -   name: APIHUB_POSTGRESQL_DB_NAME
-                    value: {{ if (default "" .Values.qubership-apihub-backend.env.db-name) }} '{{ .Values.qubership-apihub-backend.env.db-name }}' {{ else }} '{{ cat qubership-apihub-backend .Values.DELIMITER .Values.qubership-apihub.namespace .Values.DELIMITER "db" | nospace | replace "-" "_" }}' {{ end }}
+                    value: {{ if (default "" .Values.qubership-apihub-backend.env.db-name) }} '{{ .Values.qubership-apihub-backend.env.db-name }}' {{ else }} '{{ cat qubership-apihub-backend .Values.qubership-apihub.delimiter .Values.qubership-apihub.namespace .Values.qubership-apihub.delimiter "db" | nospace | replace "-" "_" }}' {{ end }}
                 -   name: APIHUB_POSTGRESQL_USERNAME
                     valueFrom:
                       secretKeyRef:
@@ -88,11 +88,11 @@ spec:
                 -   name: OLRIC_DISCOVERY_MODE
                     value: 'lan'
                 -   name: OLRIC_REPLICA_COUNT
-                    value: '{{ .Values.APIHUB_REPLICAS }}'
+                    value: '{{ .Values.qubership-apihub-backend.replicas }}'
                 -   name: ADFS_METADATA_URL
-                    value: '{{ .Values.ADFS_METADATA_URL }}'
+                    value: '{{ .Values.qubership-apihub-backend.env.adfs-metadata-url }}'
                 -   name: APIHUB_URL
-                    value: {{ if (default "" .Values.APIHUB_URL) }} '{{ .Values.APIHUB_URL }}' {{ else }} 'https://apihub-{{ .Values.qubership-apihub.namespace }}.{{ .Values.SERVER_HOSTNAME }}' {{ end }}
+                    value: {{ if (default "" .Values.qubership-apihub-backend.env.apihub-url) }} '{{ .Values.qubership-apihub-backend.env.apihub-url }}' {{ else }} 'https://apihub-{{ .Values.qubership-apihub.namespace }}.{{ .Values.qubership-apihub-ui.server-hostname }}' {{ end }}
                 -   name: SAML_CRT
                     valueFrom:
                       secretKeyRef:
@@ -104,11 +104,11 @@ spec:
                          name: 'qubership-apihub-backend-saml-secret'
                          key: saml_key
                 -   name: EXTERNAL_LINKS
-                    value: '{{ .Values.EXTERNAL_LINKS }}'
+                    value: '{{ .Values.qubership-apihub-backend.env.external-links }}'
                 -   name: DEFAULT_WORKSPACE_ID
-                    value: '{{ .Values.DEFAULT_WORKSPACE_ID }}'
+                    value: '{{ .Values.qubership-apihub-backend.env.default-workspace-id }}'
                 -   name: RELEASE_VERSION_PATTERN
-                    value: '{{ .Values.RELEASE_VERSION_PATTERN }}'
+                    value: '{{ .Values.qubership-apihub-backend.env.release-version-pattern }}'
                 -   name: JWT_PRIVATE_KEY
                     valueFrom:
                       secretKeyRef:
@@ -125,13 +125,13 @@ spec:
                          name: 'qubership-apihub-backend-gitlab-secret'
                          key: client_secret
                 -   name: PUBLISH_FILE_SIZE_LIMIT_MB
-                    value: '{{ .Values.PUBLISH_FILE_SIZE_LIMIT_MB }}'
+                    value: '{{ .Values.qubership-apihub-backend.env.publish-file-size-limit-mb }}'
                 -   name: PUBLISH_ARCHIVE_SIZE_LIMIT_MB
-                    value: '{{ .Values.PUBLISH_ARCHIVE_SIZE_LIMIT_MB }}'
+                    value: '{{ .Values.qubership-apihub-backend.env.publish-archive-size-limit-mb }}'
                 -   name: ORIGIN_ALLOWED
-                    value: '{{ .Values.ORIGIN_ALLOWED }}'
+                    value: '{{ .Values.qubership-apihub-backend.env.origin-allowed }}'
                 -   name: LDAP_SERVER
-                    value: '{{ .Values.LDAP_SERVER }}'
+                    value: '{{ .Values.qubership-apihub-backend.env.ldap.ldap-server }}'
                 -   name: LDAP_USER
                     valueFrom:
                       secretKeyRef:
@@ -199,7 +199,7 @@ spec:
                        name: 'qubership-apihub-backend-access-token-secret'
                        key: token
                 -   name: APIHUB_SKIP_DB_CREATION
-                    value: '{{ .Values.APIHUB_SKIP_DB_CREATION }}'
+                    value: '{{ .Values.qubership-apihub-backend.env.skip-db-creation }}'
                 resources:
                     requests:
                         cpu: {{ .Values.qubership-apihub-backend.resource.cpu.request }}
@@ -223,7 +223,7 @@ spec:
                     periodSeconds: 5
                     timeoutSeconds: 2
                 securityContext:
-                {{ if eq .Values.PAAS_PLATFORM "KUBERNETES" }}
+                {{ if eq .Values.qubership-apihub.paas-platform "KUBERNETES" }}
                     runAsGroup: 10001
                 {{ end }}
                     readOnlyRootFilesystem: false

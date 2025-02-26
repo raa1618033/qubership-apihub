@@ -18,11 +18,7 @@ HPA_MIN_REPLICAS
 HPA_SCALING_DOWN_SELECT_POLICY
 HPA_SCALING_UP_SELECT_POLICY
 
-!done
-'{{ .Values.SERVICE }}' - надо хардкодить соответствующее имя сервиса  
-qubership-apihub-backend
-qubership-apihub-build-task-consumer
-qubership-apihub-ui
+
 
 !done
 '{{ .Values.NAMESPACE }}' - а это надо выносить в values.yaml
@@ -30,15 +26,31 @@ qubership-apihub-ui
 qubership-apihub.namespace: '' #TO_BE_SET
 
 
-
+!done
+'{{ .Values.SERVICE }}' - надо хардкодить соответствующее имя сервиса  
+qubership-apihub-backend
+qubership-apihub-build-task-consumer
+qubership-apihub-ui
 
 !done  SERVICE_NAME, SERVICE  - hardcode  qubership-apihub-<SERVICE_NAME> 
 qubership-apihub-backend
 qubership-apihub-build-task-consumer
 qubership-apihub-ui
 
+
+!done
+SERVICE_ACCOUNT_APIHUB_SECRET_NAME: "apihub-node-service"  hardcode  ==>  qubership-apihub-build-task-consumer-secret
+SERVICE_ACCOUNT_APIHUB_SECRET_NAME: "apihub-backend-secret"  hardcode ==> qubership-apihub-backend-secret
+
+!done 
+APIHUB_ACCESS_TOKEN: 'uHw6L2LnuxY5z46qcVnN7fv7zaW6FpthbuG8wVYeYmYKzQjGeddVeFwdDHy1zGyB'  ==> qubership-apihub.access-token
+
+
+###
 !done  app.kubernetes.io/instance  - удалить
 
+
+####
 !done  app.kubernetes.io/version  - '{{ .Values.QUBERSHIP_APIHUB_VERSION }}'
        задать в value.yaml QUBERSHIP-APIHUB_VERSION: dev
        updated to  qubership-apihub.version: dev
@@ -63,7 +75,8 @@ qubership-apihub-ui-ingressdns.yaml
 !done   TLS_KEY           ==> qubership-apihub-ui.dns-ingress.tls-secret.tls-certificate-key 
 !done   DNS_ROUTE         ==> qubership-apihub-ui.dns-ingress.dns-route 
 
-!done   SERVER_HOSTNAME: ''                      ###  ==> qubership-apihub-ui.server_hostname: ''                  
+????????   SERVER_HOSTNAME: ''                      ###  ==> qubership-apihub-ui.server-hostname: ''                  
+
 ###  SERVICE: "apihub-ui"                     ###  ==> qubership-apihub-ui.service: "qubership-apihub-ui"                 
 ###  SERVICE_NAME: "apihub-ui"                ###  ==> qubership-apihub-ui.service_name: "qubership-apihub-ui"            
 ###  DEPLOYMENT_RESOURCE_NAME: "apihub-ui"    ###  ==> qubership-apihub-ui.deployment_resource_name: "qubership-apihub-ui"
@@ -71,3 +84,9 @@ qubership-apihub-ui-ingressdns.yaml
 
 
 !done    LOG_LEVEL ==> qubership-apihub.log-level: "INFO"
+
+!done .Values.PAAS_PLATFORM  ==>  .Values.qubership-apihub.paas-platform
+
+
+а про ARTIFACT_DESCRIPTOR_VERSION  тоже глобальным?
+его вообще надо удалять, это чисто cloud-deployer штука не нужная в опенсорсе

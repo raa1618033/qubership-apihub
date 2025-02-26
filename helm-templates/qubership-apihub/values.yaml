@@ -5,34 +5,16 @@ qubership-apihub:
   log-level: "INFO"
   paas-platform: "KUBERNETES"
   paas-version: '1.29'
-
-
-IMAGE_REPOSITORY: #TO_BE_SET
-TAG: #TO_BE_SET
-artifact-descriptor-version: #TO_BE_SET
-CLOUD_TOPOLOGY_KEY: kubernetes.io/hostname
-PART_OF: 'API-HUB'
-DELIMITER: '-'
-PRODUCTION_MODE: false
-APIHUB_ACCESS_TOKEN: 'uHw6L2LnuxY5z46qcVnN7fv7zaW6FpthbuG8wVYeYmYKzQjGeddVeFwdDHy1zGyB'
-LDAP_SERVER: ''
-LDAP_USER: ''
-LDAP_USER_PASSWORD: ''
-
-ADFS_METADATA_URL: '' #TO_BE_SET
-APIHUB_URL: '' #TO_BE_SET
-
-SAML_CRT: ''
-SAML_KEY: ''
-EXTERNAL_LINKS: ''
-DEFAULT_WORKSPACE_ID: ''
-
-RELEASE_VERSION_PATTERN: '^[0-9]{4}[.]{1}[1-4]{1}$'
-JWT_PRIVATE_KEY: 'LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2Z0lCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktnd2dnU2tBZ0VBQW9JQkFRQ1ZpTlJ3cVRZaFZyekkKZjhQM2g4SWJrd3dRQUY1bW41NnZCT21YbTZTUWdsOGQwQTI5VXlvSVRicmJtbVNJeE11NjEyaHJMMVJzdmlMTwo2OXBJUTd6cU9qOC9Xd3FRSzNaNTNWTGcycG5ncG1YTXRFQ3RqVFR6QWJTR0xsdklqdm1iSGhZdnhHdDFaY2lTCkYwdjNVb3RJUTFmRm9UWkdkQ205cXFWaU1pYUJFUFAya0QzVlExbFMwQ1crbWFTUmJUZ1pjR1pxb3ZUdG5zUDkKODhHRTRhZTc1QkptS2lCeVdjZGpJTlFxaTFyTFRDNVJQdGhtYWdUMVFhYTVZQmFBdy9QY1M3VnJwYS9QS0JzNwpQdTBZZUNLa3lyOGxXNDFYU29OQkJ3ZlNvbmhnUG14MUNmaStBdXFRMEF6VWxJNURScWFyWndIc2Q0UGh4SHJkCjcxNWp5R0h6QWdNQkFBRUNnZ0VBSm0vcm02SURSZ0tUdUQ0UFUzdFVDOTU2aFVweStaSWlLZjdyUklzL2U5M24KTVRTZnM0RERGeXRUMHNzVytJa05qVk45aGIrK3hjMENDWXBhcTZTdDFNOXdIb3I2WmlDbDdhRlVnblB1aGU1LwowR1N0RTI5dW91QlhWUDVwblY0VER5cG1yWlNod3FXTkx2QktHS0xoSm93WTdiWUl5NGRraTFwbjlKdkxoZlUrCjZCcm9SS0NMVzNWZlNSbVExRkd2QzhLR2daTGh4am9panVVemhIdkJxRVYxaERraU5GdzNQMjl5Ui8vQkU2VVkKbkRLZ1lNUmRRWXY3ZkFld095OHJ4RTBTS3ZiVUxOUXAxb2IxNHMxWlZGU1R4SWtvN2RYV1l0U0FwUENwdFp5bgpHVC91eG0xZnErSlhJQnI4OXFPSmlBcFBBMFVYWHM5czBITXRXTGdkSVFLQmdRRE9Ebkl2N1NaemhPdGpnSTV3Cm91WmFPRzNva3puS0xrMGp5RUQrWWhpQ2lGM1diNnZnZnUxbUh4M3NnRVp3Z2hnTTJMVERhOXpTWGV5RmpRRDAKcjNXcUM2NFNxMWdhUVVQejJ6bUVOdk8wRGdKN3pkMUVKTURxZGJacllLQUs4NUJ3ZmsvcTJoc1prM2Z5SHl4dwprZ1RzZzM0NkJGZVpsVnFGL0N0MkpnSVdtUUtCZ1FDNXgwUHkzVENBV2p5OEw5NGhrMzM0b2hwUXpDeTVxeXR3CnVHUklCTXlFVE9wNU5hUFBIQVdnbEZ3YzFMSis4bldmckZjeUEySjIrZ2V6K0ovOG1uU2hPNjF1MXVaNVV3dVkKQUQyaFlwUFcxMzJHZG9LcnI1ZkplVDJJUmR2bzRHa2FXN1Q2YnV1MGhjNzB0ZXZ4eDcxc2llWVBWaTBRenRGcgpnZSswNFBad2F3S0JnUUM2c1JnQUdFdklTbHZDOFUwYy9GcmN6MWUxYXY3bkVnQk9OVGU5d3o4VnRWdmYxNW5RCmN1L0FvTnpKMUliOWxNRVprcFprb0t1WDVnVlFFeXNVaG95REhzWCtvRVBZdGQxTmFnaTRvOWsxLzZOOGJFN1gKV0wxNU1HR3c5QUROSzFSb3Qrak1qZ1FUcmlyMHNnM2ZpRXp4eFVsdVkxVERFRERPU0dWUVRLdURzUUtCZ1FDcgpFUFRkbnBWNXF4My8vMmZnclFxek5ybGFxeGVJQkRqays3WERweitYbDZmVTR2S3ExRmZPTEs3QkVZNG5YU1c0CldSNlZmQTVnRmcyZnlCR3hyWncxbDFrMUZnZDFzbVdibXFVbGhUc3krb3lvazFueHM2Zm1LcERoZWNwc25xL0oKU0tiV2IrcjArTDNBRWdCb1M0OStjV0I1d05XUWc1RE5HUUhjSWNacmJ3S0JnRmV4a1JWUU1sZE5NVjFrTHFyMApSVzdXWTVIRk1XcnRJVkNacTZzRVIzT2NCR2xUaE9XNnpGcUJMK1pmODUzdmRtK3h6OG5ZRXRaSktiYmM3Yi9iClFQc0Uzay9FZFBRbSt4S214Y2hHQUg5ZFg0eUM5OEViSjMvc25TekxGYUpGdWdnMjArQWRxY3hNa1ZnaWhMVEMKWW1teTdTREY5OXRackxrT0dab2ZvSml4Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0='
-
+  access-token: 'uHw6L2LnuxY5z46qcVnN7fv7zaW6FpthbuG8wVYeYmYKzQjGeddVeFwdDHy1zGyB'
+  delimiter: '-'
 ########################
 qubership-apihub-backend:
-  replicas: 1  
+  image-repository: #TO_BE_SET
+  tag: 'latest'
+  replicas: 1
+  system-notification: ''
+  insecure-proxy: true
+  monitoring-enabled: false
   resource:
     cpu:
       request: "100m"
@@ -42,8 +24,6 @@ qubership-apihub-backend:
   env:  
     production-mode: true
     deployment-resource-name: "qubership-apihub-backend"
-    service_account: "qubership-apihub-backend"
-    service_account-apihub-secret-name: "qubership-apihub-backend-secret"
     diff-service-url: "http://apihub-node-service:3000"
     gitlab-url: "https://git.netcracker.com" #to_be_set
     db-type: "postgres"
@@ -55,36 +35,38 @@ qubership-apihub-backend:
     db-username: '' #to_be_set
     db-password: '' #to_be_set
     skip-db-creation: true
-
-  publish-archive-size-limit-mb: "50"
-  publish-file-size-limit-mb: "15"
-
-CLIENT_ID: '' #TO_BE_SET
-CLIENT_SECRET: '' #TO_BE_SET
-
-ORIGIN_ALLOWED: '' #TO_BE_SET
-
-
-  system-notification: ''
-  insecure-proxy: true
-
-  monitoring-enabled: false
-
-STORAGE_SERVER_USERNAME: ''
-STORAGE_SERVER_PASSWORD: ''
-STORAGE_SERVER_CRT: ''
-STORAGE_SERVER_URL: ''
-STORAGE_SERVER_BUCKET_NAME: ''
-STORAGE_SERVER_ACTIVE: false
-STORAGE_SERVER_STORE_ONLY_BUILD_RESULT: true
-
-APIHUB_ADMIN_EMAIL: 'x_APIHUB'
-APIHUB_ADMIN_PASSWORD: 'Tmf@c23s'
-
-
-
+    admin-email: 'x_APIHUB'
+    admin-password: 'Tmf@c23s'
+    adfs-metadata-url: '' #TO_BE_SET
+    apihub-url: '' #TO_BE_SET
+    external-links: ''
+    default-workspace_id: ''
+    release-version-pattern: '^[0-9]{4}[.]{1}[1-4]{1}$'
+    publish-archive-size-limit-mb: "50"
+    publish-file-size-limit-mb: "15"
+    origin-allowed: '' #TO_BE_SET
+    ldap:
+      ldap-server: ''
+      ldap-user: ''
+      ldap-user-password: ''
+    client-id: '' #TO_BE_SET
+    client-secret: '' #TO_BE_SET
+    jwt-private-key: 'LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2Z0lCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktnd2dnU2tBZ0VBQW9JQkFRQ1ZpTlJ3cVRZaFZyekkKZjhQM2g4SWJrd3dRQUY1bW41NnZCT21YbTZTUWdsOGQwQTI5VXlvSVRicmJtbVNJeE11NjEyaHJMMVJzdmlMTwo2OXBJUTd6cU9qOC9Xd3FRSzNaNTNWTGcycG5ncG1YTXRFQ3RqVFR6QWJTR0xsdklqdm1iSGhZdnhHdDFaY2lTCkYwdjNVb3RJUTFmRm9UWkdkQ205cXFWaU1pYUJFUFAya0QzVlExbFMwQ1crbWFTUmJUZ1pjR1pxb3ZUdG5zUDkKODhHRTRhZTc1QkptS2lCeVdjZGpJTlFxaTFyTFRDNVJQdGhtYWdUMVFhYTVZQmFBdy9QY1M3VnJwYS9QS0JzNwpQdTBZZUNLa3lyOGxXNDFYU29OQkJ3ZlNvbmhnUG14MUNmaStBdXFRMEF6VWxJNURScWFyWndIc2Q0UGh4SHJkCjcxNWp5R0h6QWdNQkFBRUNnZ0VBSm0vcm02SURSZ0tUdUQ0UFUzdFVDOTU2aFVweStaSWlLZjdyUklzL2U5M24KTVRTZnM0RERGeXRUMHNzVytJa05qVk45aGIrK3hjMENDWXBhcTZTdDFNOXdIb3I2WmlDbDdhRlVnblB1aGU1LwowR1N0RTI5dW91QlhWUDVwblY0VER5cG1yWlNod3FXTkx2QktHS0xoSm93WTdiWUl5NGRraTFwbjlKdkxoZlUrCjZCcm9SS0NMVzNWZlNSbVExRkd2QzhLR2daTGh4am9panVVemhIdkJxRVYxaERraU5GdzNQMjl5Ui8vQkU2VVkKbkRLZ1lNUmRRWXY3ZkFld095OHJ4RTBTS3ZiVUxOUXAxb2IxNHMxWlZGU1R4SWtvN2RYV1l0U0FwUENwdFp5bgpHVC91eG0xZnErSlhJQnI4OXFPSmlBcFBBMFVYWHM5czBITXRXTGdkSVFLQmdRRE9Ebkl2N1NaemhPdGpnSTV3Cm91WmFPRzNva3puS0xrMGp5RUQrWWhpQ2lGM1diNnZnZnUxbUh4M3NnRVp3Z2hnTTJMVERhOXpTWGV5RmpRRDAKcjNXcUM2NFNxMWdhUVVQejJ6bUVOdk8wRGdKN3pkMUVKTURxZGJacllLQUs4NUJ3ZmsvcTJoc1prM2Z5SHl4dwprZ1RzZzM0NkJGZVpsVnFGL0N0MkpnSVdtUUtCZ1FDNXgwUHkzVENBV2p5OEw5NGhrMzM0b2hwUXpDeTVxeXR3CnVHUklCTXlFVE9wNU5hUFBIQVdnbEZ3YzFMSis4bldmckZjeUEySjIrZ2V6K0ovOG1uU2hPNjF1MXVaNVV3dVkKQUQyaFlwUFcxMzJHZG9LcnI1ZkplVDJJUmR2bzRHa2FXN1Q2YnV1MGhjNzB0ZXZ4eDcxc2llWVBWaTBRenRGcgpnZSswNFBad2F3S0JnUUM2c1JnQUdFdklTbHZDOFUwYy9GcmN6MWUxYXY3bkVnQk9OVGU5d3o4VnRWdmYxNW5RCmN1L0FvTnpKMUliOWxNRVprcFprb0t1WDVnVlFFeXNVaG95REhzWCtvRVBZdGQxTmFnaTRvOWsxLzZOOGJFN1gKV0wxNU1HR3c5QUROSzFSb3Qrak1qZ1FUcmlyMHNnM2ZpRXp4eFVsdVkxVERFRERPU0dWUVRLdURzUUtCZ1FDcgpFUFRkbnBWNXF4My8vMmZnclFxek5ybGFxeGVJQkRqays3WERweitYbDZmVTR2S3ExRmZPTEs3QkVZNG5YU1c0CldSNlZmQTVnRmcyZnlCR3hyWncxbDFrMUZnZDFzbVdibXFVbGhUc3krb3lvazFueHM2Zm1LcERoZWNwc25xL0oKU0tiV2IrcjArTDNBRWdCb1M0OStjV0I1d05XUWc1RE5HUUhjSWNacmJ3S0JnRmV4a1JWUU1sZE5NVjFrTHFyMApSVzdXWTVIRk1XcnRJVkNacTZzRVIzT2NCR2xUaE9XNnpGcUJMK1pmODUzdmRtK3h6OG5ZRXRaSktiYmM3Yi9iClFQc0Uzay9FZFBRbSt4S214Y2hHQUg5ZFg0eUM5OEViSjMvc25TekxGYUpGdWdnMjArQWRxY3hNa1ZnaWhMVEMKWW1teTdTREY5OXRackxrT0dab2ZvSml4Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0='
+    saml:
+      saml-crt: ''
+      saml-key: ''
+    storage-server:
+      storage-server-username: ''
+      storage-server-password: ''
+      storage-server-crt: ''
+      storage-server-url: ''
+      storage-server-bucket-name: ''
+      storage-server-active: false
+      storage-server-store-only-build-result: true
 #####apihub-node-service
 qubership-apihub-build-task-consumer:
+  image-repository: #TO_BE_SET
+  tag: 'latest'
   replicas: 1  
   resource:
     cpu:
@@ -93,21 +75,15 @@ qubership-apihub-build-task-consumer:
     memory:
      limit: "4200Mi"
      request: "750Mi"
-     
-     
-SERVICE: "apihub-node-service"
-SERVICE_NAME: "apihub-node-service"
-DEPLOYMENT_RESOURCE_NAME: "apihub-node-service"
-
-SERVICE_ACCOUNT: "apihub-node-service"
-SERVICE_ACCOUNT_APIHUB_SECRET_NAME: "apihub-node-service"
-
-APIHUB_BACKEND_ADDRESS: "apihub-backend:8080"
-FOLDER_STORE: "/tmp"
-OPERATIONS_BUILD_BATCH: "16"
- 
+  env:
+    folder-store: "/tmp"
+    operations-build-batch: "16"
 #####apihub-ui 
 qubership-apihub-ui:
+  image-repository: #TO_BE_SET
+  tag: 'latest'
+  server-hostname: ''
+  apihub-backend-address: "apihub-backend:8080"
   replicas: 1  
   resource:
     cpu:
@@ -116,7 +92,6 @@ qubership-apihub-ui:
     memory:
      limit: "64Mi"
      request: "64Mi"
-
   ingress:
     ...
   dns-ingress:
@@ -126,26 +101,9 @@ qubership-apihub-ui:
      tls-secret:
        tls-certificate: ''
        tls-certificate-key: ''
+  env:
+    ssl:
+      certificate-bundle-md5sum: "d41d8cd98f00b204e9800998ecf8427e"
+      ssl-secret: "defaultsslcertificate"
 
-# Names
-###  SERVER_HOSTNAME: ''                      ###  ==> qubership-apihub-ui.server_hostname: ''                  
-###  SERVICE: "apihub-ui"                     ###  ==> qubership-apihub-ui.service: "qubership-apihub-ui"                 
-###  SERVICE_NAME: "apihub-ui"                ###  ==> qubership-apihub-ui.service_name: "qubership-apihub-ui"            
-###  DEPLOYMENT_RESOURCE_NAME: "apihub-ui"    ###  ==> qubership-apihub-ui.deployment_resource_name: "qubership-apihub-ui"
-
-# SSL
-#####  Not used ???    CERTIFICATE_BUNDLE_MD5SUM: "d41d8cd98f00b204e9800998ecf8427e"
-#####  Not used ???    SSL_SECRET: "defaultsslcertificate"
-
-
-###  DNS_ROUTE_ENABLE: false             ###  ==> qubership-apihub-ui.dns-ingress.enabled
-###  TLS_CRT: ''                         ###  ==> qubership-apihub-ui.dns-ingress.tls-secret.tls-certificate 
-###  TLS_KEY: ''                         ###  ==> qubership-apihub-ui.dns-ingress.tls-secret.tls-certificate-key 
-###  DNS_ROUTE: ''                       ###  ==> qubership-apihub-ui.dns-ingress.dns-route 
-
-
-# Docker repository
-
-APIHUB_NC_SERVICE_ADDRESS: "apihub-nc-service:8080"
-APIHUB_BACKEND_ADDRESS: "apihub-backend:8080"
 
