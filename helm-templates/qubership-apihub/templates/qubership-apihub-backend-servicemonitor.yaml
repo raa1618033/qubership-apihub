@@ -1,4 +1,4 @@
-{{ if .Values.qubership-apihub-backend.monitoring-enabled }}
+{{ if .Values.qubershipApihubBackend.monitoringEnabled }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -22,7 +22,7 @@ spec:
   jobLabel: k8s-app
   namespaceSelector:
     matchNames:
-      - {{ .Values.qubership-apihub.namespace }}
+      - {{ .Values.qubershipApihub.namespace }}
   selector:
     matchLabels:
       app.kubernetes.io/name: qubership-apihub-backend

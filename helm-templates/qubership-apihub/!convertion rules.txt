@@ -85,7 +85,7 @@ qubership-apihub-ui-ingressdns.yaml
 
 !done    LOG_LEVEL ==> qubership-apihub.log-level: "INFO"
 
-!done .Values.PAAS_PLATFORM  ==>  .Values.qubership-apihub.paas-platform
+!done .Values.PAAS_PLATFORM  ==>  .Values.qubershipApihub.paas-platform
 
 
 а про ARTIFACT_DESCRIPTOR_VERSION  тоже глобальным?

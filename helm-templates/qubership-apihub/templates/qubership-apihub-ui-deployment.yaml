@@ -15,7 +15,7 @@ spec:
     selector:
         matchLabels:
           name: qubership-apihub-ui
-    replicas: {{ .Values.qubership-apihub-ui.replicas }}
+    replicas: {{ .Values.qubershipApihubUi.replicas }}
     strategy:
         type: RollingUpdate
         rollingUpdate:
@@ -37,37 +37,22 @@ spec:
             dnsPolicy: ClusterFirst
             containers:
             -   name: 'qubership-apihub-ui'
-                image: '{{ .Values.qubership-apihub-ui.image-repository }}:{{ .Values.qubership-apihub-ui.tag }}'
+                image: '{{ .Values.qubershipApihubUi.imageRepository }}:{{ .Values.qubershipApihubUi.tag }}'
                 imagePullPolicy: Always
                 ports:
                 -   name: web
                     containerPort: 8080
                     protocol: TCP
                 env:
-#{{ include "env.template" . | indent 16 }}
-                {{- define "env.template" -}}
-                -   name: CERTIFICATE_BUNDLE_{{ .Values.qubership-apihub-ui.env.ssl.ssl-secret }}_MD5SUM
-                    value: '{{ .Values.qubership-apihub-ui.env.ssl.certificate-bundle-md5sum }}'
-                -   name: NAMESPACE
-                    value: '{{ .Values.qubership-apihub.namespace }}'
-                -   name: MICROSERVICE_NAME
-                    value: 'qubership-apihub-ui'
-                -   name: CLOUD_SERVICE_NAME
-                    value: 'qubership-apihub-ui'
-                -   name: CLOUD_NAMESPACE
-                    valueFrom:
-                        fieldRef:
-                            fieldPath: metadata.namespace
                 - name: APIHUB_BACKEND_ADDRESS
-                  value: '{{ .Values.qubership-apihub-ui.apihub-backend-address }}'
-                {{- end -}}
+                  value: '{{ .Values.qubershipApihubUi.apihubBackendAddress }}'
                 resources:
                     requests:
-                        cpu: '{{ .Values.qubership-apihub-ui.resource.cpu.request }}'
-                        memory: '{{ .Values.qubership-apihub-ui.resource.memory.request }}'
+                        cpu: '{{ .Values.qubershipApihubUi.resource.cpu.request }}'
+                        memory: '{{ .Values.qubershipApihubUi.resource.memory.request }}'
                     limits:
-                        memory: '{{ .Values.qubership-apihub-ui.resource.memory.limit }}'
-                        cpu: {{ .Values.qubership-apihub-ui.resource.cpu.limit }}
+                        memory: '{{ .Values.qubershipApihubUi.resource.memory.limit }}'
+                        cpu: {{ .Values.qubershipApihubUi.resource.cpu.limit }}
                 livenessProbe:
                   httpGet:
                     path: /probes/live
@@ -80,9 +65,7 @@ spec:
                     port: web
                   initialDelaySeconds: 5
                 securityContext:
-                {{ if eq .Values.qubership-apihub.paas-platform "KUBERNETES" }}
                     runAsGroup: 10001
-                {{ end }}
                     readOnlyRootFilesystem: false
                     runAsNonRoot: true
                     seccompProfile:
