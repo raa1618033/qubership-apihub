@@ -37,7 +37,7 @@ spec:
             dnsPolicy: ClusterFirst
             containers:
             -   name: 'qubership-apihub-ui'
-                image: '{{ .Values.qubershipApihubUi.imageRepository }}:{{ .Values.qubershipApihubUi.tag }}'
+                image: '{{ .Values.qubershipApihubUi.image.repository }}:{{ .Values.qubershipApihubUi.image.tag }}'
                 imagePullPolicy: Always
                 ports:
                 -   name: web

@@ -32,7 +32,7 @@ spec:
             serviceAccountName: 'qubership-apihub-build-task-consumer'
             containers:
             -   name: 'qubership-apihub-build-task-consumer'
-                image: '{{ .Values.qubershipApihubBuildTaskConsumer.imageRepository }}:{{ .Values.qubershipApihubBuildTaskConsumer.tag }}'
+                image: '{{ .Values.qubershipApihubBuildTaskConsumer.image.repository }}:{{ .Values.qubershipApihubBuildTaskConsumer.image.tag }}'
                 ports:
                 -   name: web
                     containerPort: 3000
