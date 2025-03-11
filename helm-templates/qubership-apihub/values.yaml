@@ -8,8 +8,8 @@ qubershipApihub:
   delimiter: '-'
 ########################
 qubershipApihubBackend:
-  image
-    rpository: ghcr.io/netcracker/qubership-apihub-backend  #TO_BE_SET
+  image:
+    repository: 'ghcr.io/netcracker/qubership-apihub-backend'  #TO_BE_SET
     tag: 'latest'
   replicas: 1
   monitoring:
@@ -66,8 +66,8 @@ qubershipApihubBackend:
       storeOnlyBuildResult: true
 #####apihub-node-service
 qubershipApihubBuildTaskConsumer:
-  image
-    repository: ghcr.io/netcracker/qubership-apihub-build-task-consumer #TO_BE_SET
+  image:
+    repository: 'ghcr.io/netcracker/qubership-apihub-build-task-consumer' #TO_BE_SET
     tag: 'latest'
   replicas: 1  
   resource:
@@ -82,8 +82,8 @@ qubershipApihubBuildTaskConsumer:
     operationsBuildBatch: "16"
 #####apihub-ui 
 qubershipApihubUi:
-  image
-    repository: ghcr.io/netcracker/qubership-apihub-ui  #TO_BE_SET
+  image:
+    repository: 'ghcr.io/netcracker/qubership-apihub-ui'  #TO_BE_SET
     tag: 'latest'
   apihubBackendAddress: "apihub-backend:8080"
   replicas: 1  
