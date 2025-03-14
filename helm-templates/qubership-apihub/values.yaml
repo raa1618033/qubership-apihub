@@ -1,8 +1,7 @@
-
 qubershipApihub:
   version: dev
-  namespace: '' #TO_BE_SET
-  serverHostname: ''
+  namespace: 'default' #TO_BE_SET
+  serverHostname: 'host.docker.internal'
   logLevel: "INFO"
   accessToken: 'uHw6L2LnuxY5z46qcVnN7fv7zaW6FpthbuG8wVYeYmYKzQjGeddVeFwdDHy1zGyB'
   delimiter: '-'
@@ -10,7 +9,7 @@ qubershipApihub:
 qubershipApihubBackend:
   image:
     repository: 'ghcr.io/netcracker/qubership-apihub-backend'  #TO_BE_SET
-    tag: 'latest'
+    tag: 'dev'
   replicas: 1
   monitoring:
     enabled: false
@@ -26,13 +25,13 @@ qubershipApihubBackend:
     diffServiceUrl: "http://apihub-node-service:3000"
     gitlabUrl: "https://git.netcracker.com" #to_be_set
     dbType: "postgres"
-    dbHost: "pg-common"
+    dbHost: "pg-common.postgres-db.svc.cluster.local"
     dbPort: "5432"
-    dbAdminUsername: '' #to_be_set
-    dbAdminPassword: '' #to_be_set
-    dbName: '' #to_be_set
-    dbUsername: '' #to_be_set
-    dbPassword: '' #to_be_set
+    dbAdminUsername: 'apihub_backend_user'
+    dbAdminPassword: 'apihub_backend_password'
+    dbName: 'apihub_backend'
+    dbUsername: 'apihub_backend_user'
+    dbPassword: 'apihub_backend_password'
     skipDbCreation: true
     adminEmail: 'x_APIHUB'
     adminPassword: 'Tmf@c23s'
@@ -68,7 +67,7 @@ qubershipApihubBackend:
 qubershipApihubBuildTaskConsumer:
   image:
     repository: 'ghcr.io/netcracker/qubership-apihub-build-task-consumer' #TO_BE_SET
-    tag: 'latest'
+    tag: 'dev'
   replicas: 1  
   resource:
     cpu:
@@ -84,8 +83,8 @@ qubershipApihubBuildTaskConsumer:
 qubershipApihubUi:
   image:
     repository: 'ghcr.io/netcracker/qubership-apihub-ui'  #TO_BE_SET
-    tag: 'latest'
-  apihubBackendAddress: "apihub-backend:8080"
+    tag: 'dev'
+  apihubBackendAddress: "qubership-apihub-backend:8080"
   replicas: 1  
   resource:
     cpu:
@@ -98,7 +97,7 @@ qubershipApihubUi:
 #    ...
   dnsIngress:
      enabled: true
-     dnsRoute: ''
+     dnsRoute: 'qubership-apihub'
      url: 
      tlsSecret:
        certificate: ''
