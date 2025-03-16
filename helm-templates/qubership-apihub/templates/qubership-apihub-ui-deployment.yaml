@@ -46,6 +46,8 @@ spec:
                 env:
                 - name: APIHUB_BACKEND_ADDRESS
                   value: '{{ .Values.qubershipApihubUi.apihubBackendAddress }}'
+                - name: APIHUB_NC_SERVICE_ADDRESS
+                  value: '{{ .Values.qubershipApihubUi.apihubNcServiceAddress }}'
                 resources:
                     requests:
                         cpu: '{{ .Values.qubershipApihubUi.resource.cpu.request }}'

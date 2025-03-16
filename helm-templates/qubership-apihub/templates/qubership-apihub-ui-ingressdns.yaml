@@ -13,10 +13,10 @@ metadata:
 spec:
     tls:
         - hosts:
-            - '{{ .Values.qubershipApihubUi.dnsIngress.dnsRoute }}'
+            - '{{ .Values.qubershipApihubUi.dnsIngress.dnsRoute }}.{{ .Values.qubershipApihubUi.dnsIngress.url }}'
           secretName: 'qubership-apihub-ui-tls'
     rules:
-        -   host: '{{ .Values.qubershipApihubUi.dnsIngress.dnsRoute }}'
+        -   host: '{{ .Values.qubershipApihubUi.dnsIngress.dnsRoute }}.{{ .Values.qubershipApihubUi.dnsIngress.url }}'
             http:
                 paths:
                     -   path: /

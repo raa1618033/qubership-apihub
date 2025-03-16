@@ -1,3 +1,4 @@
+{{- if .Values.qubershipApihub.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -11,13 +12,14 @@ metadata:
         app.kubernetes.io/managed-by: helm
 spec:
     rules:
-        -   host: 'apihub-{{ .Values.qubershipApihub.namespace }}.{{ .Values.qubershipApihub.serverHostname }}'
+        -   host: '{{ .Values.qubershipApihub.ingress.host }}'
             http:
                 paths:
-                    -   path: /
-                        pathType: Prefix
+                    -   path: '{{ .Values.qubershipApihub.ingress.path }}'
+                        pathType: '{{ .Values.qubershipApihub.ingress.pathType }}'
                         backend:
                             service:
                                 name: 'qubership-apihub-ui'
                                 port:
                                     name: web
+{{- end }}
