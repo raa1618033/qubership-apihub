@@ -1,0 +1,36 @@
+#Deploy Parameter name # Default Value # Mandatory # Description
+qubership-apihub-backend =''  #  #
+APIHUB_POSTGRESQL_HOST = localhost # Yes # PG host address
+APIHUB_POSTGRESQL_PORT = 5432 # Yes # PG port
+APIHUB_POSTGRESQL_DB_NAME = apihub # Yes # Logical database in PG cluster for APIHUB. Manual pre-creation required
+APIHUB_POSTGRESQL_USERNAME = apihub # Yes # User for APIHUB_POSTGRESQL_DB_NAME database
+APIHUB_POSTGRESQL_PASSWORD = apihub # Yes # Password for APIHUB_POSTGRESQL_USERNAME user.
+PRODUCTION_MODE = FALSE # Yes # "Enables production mode - login under local apihub users is prohibited in this mode. In this mode only SAML auth is possible
+APIHUB_ADMIN_EMAIL =''  # No # Default admin user login (example: x_apihub). If set - this admin user will be created automatically.
+APIHUB_ADMIN_PASSWORD =''  # No # Default admin user password (example: password)
+APIHUB_ACCESS_TOKEN =''  # Yes # Default system access token (any string). The token will be provisioned automatically during bootstrap
+APIHUB_URL =''  # No # Factual APIHUB server URL in your environment. Required only if SAML integration enabled
+ADFS_METADATA_URL =''  # No # SAML metadata URL. If set - enables SAML integration
+SAML_CRT =''  # No # "SAML server certificate
+SAML_KEY =''  # No # "SAML server private key
+DB_TYPE = postgres # No #
+DIFF_SERVICE_URL = http://localhost:3000 # Yes # qubership-build-task-consumer service URL. May vary depends on deploy schema
+JWT_PRIVATE_KEY =''  # Yes # "Self generated private PKCS#8 private key
+LDAP_SERVER =''  # No # LDAP server URL. Required for SAML integration for syncing user inf
+LDAP_USER =''  # No # dc=example
+LDAP_USER_PASSWORD =''  # No # Password for LDAP User
+MINIO_STORAGE_ACTIVE = FALSE # No # Set to true to enable S3 integration. S3 is used for store debug data
+STORAGE_SERVER_USERNAME =''  # No # Access Key ID from Minio S3 storage
+STORAGE_SERVER_BUCKET_NAME =''  # No # Bucket name in Minio S3 storage
+STORAGE_SERVER_CRT =''  # No # Certificate for accessing Minio S3 storage
+STORAGE_SERVER_URL =''  # No # Minio endpoint for client connection
+STORAGE_SERVER_PASSWORD =''  # No # Secret key for Minio S3 storage access
+MINIO_STORE_ONLY_BUILD_RESULT = FALSE # No # Set to true to store only build results (less data amout) in S3 storage
+ORIGIN_ALLOWED =''  # No # TODO
+PUBLISH_ARCHIVE_SIZE_LIMIT_MB = 50 # No # Limit for uploaded package size in order to avoid OOM
+PUBLISH_FILE_SIZE_LIMIT_MB = 15 # No # Limit for uploaded file (inside package) size in order to avoid OOM
+RELEASE_VERSION_PATTERN = ^[0-9]{4}[.]{1}[1-4]{1}$ # No # Regex pattern for releases names validation.
+SYSTEM_NOTIFICATION =''  # No # If set - footer with this text is shown for alll APIHUB users in APIHUB UI. Designed for maintenance windows.
+INSECURE_PROXY = FALSE # No # Set to true to enable apihub playground work without authtorization.
+MONITORING_ENABLED =''  # No # Set to true to enable Prometheus metrics endpoints
+ARTIFACT_DESCRIPTOR_VERSION = unknown # No # "APIHUB release version
