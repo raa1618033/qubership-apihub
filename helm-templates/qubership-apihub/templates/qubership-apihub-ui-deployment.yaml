@@ -6,7 +6,6 @@ metadata:
     labels:
         name: qubership-apihub-ui
         app.kubernetes.io/name: 'qubership-apihub-ui'
-#        app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
         app.kubernetes.io/component: frontend
         app.kubernetes.io/part-of: qubership-apihub
         app.kubernetes.io/managed-by: helm
@@ -26,7 +25,6 @@ spec:
             labels:
                 name: qubership-apihub-ui
                 app.kubernetes.io/name: 'qubership-apihub-ui'
-#                app.kubernetes.io/version: '{{ .Values.ARTIFACT_DESCRIPTOR_VERSION }}'
                 app.kubernetes.io/component: frontend
                 app.kubernetes.io/part-of: qubership-apihub
                 app.kubernetes.io/managed-by: helm

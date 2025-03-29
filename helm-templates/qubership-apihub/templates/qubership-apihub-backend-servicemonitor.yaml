@@ -22,7 +22,7 @@ spec:
   jobLabel: k8s-app
   namespaceSelector:
     matchNames:
-      - {{ .Values.qubershipApihub.namespace }}
+      - {{ .Release.Namespace }}
   selector:
     matchLabels:
       app.kubernetes.io/name: qubership-apihub-backend

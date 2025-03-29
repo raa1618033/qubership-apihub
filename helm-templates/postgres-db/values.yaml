@@ -1,5 +1,5 @@
 replicaCount: 1
-namespace: 'postgres-db'
+namespace: '{{ .Release.Namespace }}'
 image:
   repository: postgres
   tag: "16.8"
@@ -9,13 +9,11 @@ postgresql:
   database: apihub_backend
   username: apihub_backend_user
   password: apihub_backend_password
-  # Создаем дополнительного пользователя для backend API
   additionalUsers:
     - name: apihub_backend_user
       password: apihub_backend_password
       databases:
         - apihub_backend
-  # Добавляем скрипты инициализации
   initdbScripts:
     init.sql: |
       -- Создание пользователя и базы данных

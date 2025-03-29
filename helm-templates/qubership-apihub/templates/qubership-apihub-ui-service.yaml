@@ -16,12 +16,12 @@ spec:
  #       targetPort: 8080
    type: {{ .Values.qubershipApihubUi.service.type }}
    ports:
-   - name: http-service1234
+   - name: http-service
      port: {{ .Values.qubershipApihubUi.service.http.port }}
      targetPort: {{ .Values.qubershipApihubUi.service.http.targetPort }}
 #     nodePort: {{ .Values.qubershipApihubUi.service.http.nodePort }}
      protocol: TCP
-   - name: https-serive123
+   - name: https-serive
      port: {{ .Values.qubershipApihubUi.service.https.port }}
      targetPort: {{ .Values.qubershipApihubUi.service.https.targetPort }}
 #     nodePort: {{ .Values.qubershipApihubUi.service.https.nodePort }}
