@@ -10,7 +10,7 @@ qubershipApihub:
 ########################
 qubershipApihubBackend:
   image:
-    repository: 'ghcr.io/netcracker/qubership-apihub-backend'  #TO_BE_SET
+    repository: 'ghcr.io/netcracker/qubership-apihub-backend'  
     tag: 'dev'
   replicas: 1
 
@@ -29,7 +29,7 @@ qubershipApihubBackend:
     productionMode: 'FALSE' 
     deploymentResourceName: "qubership-apihub-backend"
     # DIFF_SERVICE_URL # Mandatory # qubership-build-task-consumer service URL. May vary depends on deploy schema
-    diffServiceUrl: 'http://localhost:3000 ' 
+    diffServiceUrl: 'http://qubership-apihub-build-task-consumer:3000' 
 
 #    # GITLAB_URL # Optional # Deprecated. Required for Editor feature
 #    gitlabUrl: '' 
@@ -88,9 +88,9 @@ qubershipApihubBackend:
       # Optional # Password for LDAP User
       password: ''
     # Optional # Deprecated. Required for Editor feature
-    clientId: '' #TO_BE_SET
+    clientId: '' 
     # Optional # Deprecated. Required for Editor feature
-    clientSecret: '' #TO_BE_SET
+    clientSecret: '' 
 
     #jwtPrivateKey - Self generated private PKCS#8 private key in base64 encode format.
     jwtPrivateKey: ''
@@ -115,7 +115,7 @@ qubershipApihubBackend:
 #####apihub-node-service
 qubershipApihubBuildTaskConsumer:
   image:
-    repository: 'ghcr.io/netcracker/qubership-apihub-build-task-consumer' #TO_BE_SET
+    repository: 'ghcr.io/netcracker/qubership-apihub-build-task-consumer' 
     tag: 'dev'
   replicas: 1  
   resource:
@@ -133,7 +133,7 @@ qubershipApihubBuildTaskConsumer:
 #####apihub-ui 
 qubershipApihubUi:
   image:
-    repository: 'ghcr.io/netcracker/qubership-apihub-ui'  #TO_BE_SET
+    repository: 'ghcr.io/netcracker/qubership-apihub-ui'  
     tag: 'dev'
   # APIHUB_BACKEND_ADDRESS # Mandatory # apihub-backend address.
   apihubBackendAddress: 'qubership-apihub-backend:8080'
@@ -165,8 +165,8 @@ qubershipApihubUi:
     http:
       port: 8080
       targetPort: 8080
-      nodePort: 30080
+#      nodePort: 30080
     https:
       port: 8443
       targetPort: 8443
-      nodePort: 30443
+#      nodePort: 30443

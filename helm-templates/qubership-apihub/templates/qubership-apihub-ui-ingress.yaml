@@ -24,15 +24,5 @@ spec:
                                 name: 'qubership-apihub-ui'
                                 port:
                                     name: http-service
-#    rules:
-#        -   host: '{{ .Values.qubershipApihubUi.ingress.host }}.{{ .Values.qubershipApihubUi.ingress.url }}'
-#            http:
-#                paths:
-#                    -   path: '{{ .Values.qubershipApihubUi.ingress.path }}'
-#                        pathType: '{{ .Values.qubershipApihubUi.ingress.pathType }}'
-#                        backend:
-#                            service:
-#                                name: 'qubership-apihub-ui'
-#                                port:
-#                                    name: web
+
 {{- end }}
