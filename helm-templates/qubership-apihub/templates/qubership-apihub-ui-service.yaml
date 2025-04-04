@@ -17,7 +17,7 @@ spec:
      targetPort: {{ .Values.qubershipApihubUi.service.http.targetPort }}
      nodePort: {{ .Values.qubershipApihubUi.service.http.nodePort }}
      protocol: TCP
-   - name: https-serive
+   - name: https-service
      port: {{ .Values.qubershipApihubUi.service.https.port }}
      targetPort: {{ .Values.qubershipApihubUi.service.https.targetPort }}
      nodePort: {{ .Values.qubershipApihubUi.service.https.nodePort }}

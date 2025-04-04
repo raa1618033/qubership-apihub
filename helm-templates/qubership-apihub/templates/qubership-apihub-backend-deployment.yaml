@@ -90,7 +90,7 @@ spec:
                 -   name: ADFS_METADATA_URL  
                     value: '{{ .Values.qubershipApihubBackend.env.adfsMetadataUrl }}'
                 -   name: APIHUB_URL  
-                    value: {{ if (default "" .Values.qubershipApihubBackend.env.apihubUrl) }} '{{ .Values.qubershipApihubBackend.env.apihubUrl }}' {{ else }} 'https://apihub-{{ .Release.Namespace }}.{{ .Values.qubershipApihub.serverHostname }}' {{ end }}
+                    value: '{{ .Values.qubershipApihub.apihubUrl }}'
                 -   name: SAML_CRT
                     valueFrom:
                       secretKeyRef:

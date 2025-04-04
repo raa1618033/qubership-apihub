@@ -1,41 +1,51 @@
-## Qubership APIHUB Installation on local k8s cluster (Rancher Desktop by SUSE)
+# Qubership APIHIB Installation on Local Kubernetes Cluster (Rancher Desktop)
 
-Rancher Desktop Official site: https://rancherdesktop.io/
+[Rancher Desktop Official Site](https://rancherdesktop.io/)
 
-Install Rancher Desktop accordingly https://docs.rancherdesktop.io/getting-started/installation
+## Prerequisites
+1. Install Rancher Desktop:   
+   Official Installation Guide(https://docs.rancherdesktop.io/getting-started/installation)
+2. Start Kubernetes cluster in Rancher Desktop
 
-### Ingress Controller
-By default Ingress Controller in Rancher Desktop uses ports 80 and 443.
+## 1. Ingress Controller
+Default ports used:
+- 80 (HTTP)
+- 443 (HTTPS)
 
-Check the listening ports are available for Ingress Controller.
+If ports are busy:
+-  Change ports in Rancher Desktop settings, OR
+-  Use port forwarding
 
-If those ports are unavailable you should change Ingress Controller ports or use port-forward.
+## 2. Generate Required Secrets
+    cd qubership-apihub/helm-templates/qubership-apihub
 
-### Generate secrets
-Navigate to qubership-apihub\helm-templates\qubership-apihub directory
+    # Generate JWT key
+    ./generate_jwt_pkey.sh
 
-run generate_jwt_pkey.sh to generate jwt_private_key file
+    # Generate passwords
+    ./generate-local-passwords.sh
 
-run generate-local-passwords.sh to generate local-secrets.yaml  file
+## 3. Deploy PostgreSQL Database
+    helm install postgres-db -n postgres-db --create-namespace \
+      ../helm-templates/postgres-db
 
-### Deploy postgres DB
-run 
-`helm install postgres-db -n postgres-db --create-namespace ..\helm-templates\postgres-db`
+## 4. Deploy APIHIB Application
+    helm install apihub -n apihub --create-namespace \
+      -f ../helm-templates/qubership-apihub/local-k8s-values.yaml \
+      -f ../helm-templates/qubership-apihub/local-secrets.yaml \
+      ../helm-templates/qubership-apihub
 
-where ..\helm-templates\postgres-db is the path to postgres-db CHART
+## 5. Verify Installation
+Check running pods:
+    kubectl get pods -n apihub
 
+Expected output:
+     NAMESPACE       NAME                                                    READY   STATUS    RESTARTS       AGE
+     apihub          qubership-apihub-backend-866965f5cc-lxv9l               1/1     Running   0              3m
+     apihub          qubership-apihub-build-task-consumer-588bf5d685-bkjjm   1/1     Running   0              3m
+     apihub          qubership-apihub-ui-99d98758b-sh5tk                     1/1     Running   0              3m
 
-### Deploy qubership-apihub appliction
-run
-`helm install apihub -n apihub --create-namespace -f ..\helm-templates\qubership-apihub\local-k8s-values.yaml -f ..\helm-templates\qubership-apihub\local-secrets.yaml ..\helm-templates\qubership-apihub`
+## Uninstallation
+    helm uninstall apihub -n apihub
+    heml uninstall postgres-db -n postgres-db
 
-where ..\helm-templates\qubership-apihub is the path to qubership-apihub CHART
-
-### check pods have status Running
-`kubectl get pods -n apihub`
-
-### uninstall  qubership-apihub
-run
-`helm uninstall apihub -n apihub`
-
-`helm uninstall postgres-db -n postgres-db`
